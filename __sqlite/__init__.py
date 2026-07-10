@@ -1,0 +1,2 @@
+from .modifyTable import modifyTable
+from .spatialiteConnection import spatialiteConnection
