@@ -269,7 +269,8 @@ _ISO3 = {
     },
     "Global": {
         "en": "Global",
-        "zh": "全球"
+        # "zh": "全球"
+        "zh": "六大研究区域"
     },
     "Other_Dev":{
         "en": "Other DCs",

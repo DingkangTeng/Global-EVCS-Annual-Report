@@ -46,7 +46,8 @@ class plotAcccessibilityBar(languageTemplate):
                         {"AUS", "NZL"} if iso3 == "AUS&NZL" else
                         GS if iso3 == "GS" else
                         EUR if iso3 == "EUR" else 
-                        os.listdir(self.dataPath)
+                        # os.listdir(self.dataPath)
+                        CHN | ASEAN | GS | EUR | {"JPN", "KOR", "USA", "CAN", "AUS", "NZL"}
                     ):
                     path = os.path.join(self.dataPath, c, f"{c}{suffix}.csv")
                     dfs.append(pd.read_csv(path, index_col="accessibility", dtype=float)) if os.path.exists(path) else None

@@ -16,9 +16,9 @@ class languageTemplate:
         self.language = language
 
         if tickSizeMultiple != 0:
-                plt.plt.rcParams["font.size"] *= tickSizeMultiple
-                plt.plt.rcParams["xtick.labelsize"] *= tickSizeMultiple
-                plt.plt.rcParams["ytick.labelsize"] *= tickSizeMultiple
-                plt.plt.rcParams["axes.labelsize"] *= tickSizeMultiple
+            plt.plt.rcParams["font.size"] *= tickSizeMultiple
+            plt.plt.rcParams["xtick.labelsize"] *= tickSizeMultiple
+            plt.plt.rcParams["ytick.labelsize"] *= tickSizeMultiple
+            plt.plt.rcParams["axes.labelsize"] *= tickSizeMultiple
         
         return

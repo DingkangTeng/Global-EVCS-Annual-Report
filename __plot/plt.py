@@ -18,7 +18,7 @@ def setLanguage(ln: str) -> None:
         plt.rcParams["font.sans-serif"] = "SimSun" # 仿宋
         plt.rcParams["axes.unicode_minus"] = False
     elif ln == "en":
-        plt.rcParams["font.sans-serif"] = "Times New Roman"
+        plt.rcParams["font.sans-serif"] = "Arial" #"Times New Roman"
         plt.rcParams["axes.unicode_minus"] = True
 
     return
