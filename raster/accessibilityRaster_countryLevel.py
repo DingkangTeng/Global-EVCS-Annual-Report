@@ -50,7 +50,7 @@ def accessibilityRaster_Country(
 
         if os.path.exists(popPath):
             subEVCSDf = evcsDf.loc[evcsDf["level1"] == iso3]
-            bar.set_description(f"Calculating spatial coverage of EVCS for {iso3}")
+            bar.set_description(f"Calculating accesibility for {iso3}")
             __processByCountry(iso3, geom, subEVCSDf, popPath, thres, blockSize, maxThread, os.path.join(savePath, str(iso3)))
             bar.update()
         

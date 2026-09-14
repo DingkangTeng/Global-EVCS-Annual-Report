@@ -31,17 +31,17 @@ def spatialCoverage(
     dataDf[col4] = np.nan
     col5 = "spatialCoverageForPop"
     dataDf[col5] = np.nan
-    # Builtup
-    col_2 = "spatialCoverage_BuiltUp"
-    dataDf[col_2] = np.nan
-    col2_2 = "spatialCoverageForPOI1_BuiltUp"
-    dataDf[col2_2] = np.nan
-    col3_2 = "spatialCoverageForPOI2_BuiltUp"
-    dataDf[col3_2] = np.nan
-    col4_2 = "spatialCoverageForPOI3_BuiltUp"
-    dataDf[col4_2] = np.nan
-    col5_2 = "spatialCoverageForPop_BuiltUp"
-    dataDf[col5_2] = np.nan
+    # # Builtup # 可以删
+    # col_2 = "spatialCoverage_BuiltUp"
+    # dataDf[col_2] = np.nan
+    # col2_2 = "spatialCoverageForPOI1_BuiltUp"
+    # dataDf[col2_2] = np.nan
+    # col3_2 = "spatialCoverageForPOI2_BuiltUp"
+    # dataDf[col3_2] = np.nan
+    # col4_2 = "spatialCoverageForPOI3_BuiltUp"
+    # dataDf[col4_2] = np.nan
+    # col5_2 = "spatialCoverageForPop_BuiltUp"
+    # dataDf[col5_2] = np.nan
     # Non-builtup
     col_3 = "spatialCoverage_Other"
     dataDf[col_3] = np.nan
@@ -90,11 +90,11 @@ def spatialCoverage(
         (col3, "REAL", None, False),
         (col4, "REAL", None, False),
         (col5, "REAL", None, False),
-        (col_2, "REAL", None, False),
-        (col2_2, "REAL", None, False),
-        (col3_2, "REAL", None, False),
-        (col4_2, "REAL", None, False),
-        (col5_2, "REAL", None, False),
+        # (col_2, "REAL", None, False),
+        # (col2_2, "REAL", None, False),
+        # (col3_2, "REAL", None, False),
+        # (col4_2, "REAL", None, False),
+        # (col5_2, "REAL", None, False),
         (col_3, "REAL", None, False),
         (col2_3, "REAL", None, False),
         (col3_3, "REAL", None, False),
@@ -140,20 +140,20 @@ def __processByCountry(
                 continue
             elif subEVCS.shape[0] <= thres:
                 dataDf.at[idx, "spatialCoverage"] = -100
-                dataDf.at[idx, "spatialCoverage_BuiltUp"] = -100
-                dataDf.at[idx, "spatialCoverage_Other"] = -100
+                # dataDf.at[idx, "spatialCoverage_BuiltUp"] = -100
+                # dataDf.at[idx, "spatialCoverage_Other"] = -100
                 dataDf.at[idx, "spatialCoverageForPOI1"] = -100
-                dataDf.at[idx, "spatialCoverageForPOI1_BuiltUp"] = -100
-                dataDf.at[idx, "spatialCoverageForPOI1_Other"] = -100
+                # dataDf.at[idx, "spatialCoverageForPOI1_BuiltUp"] = -100
+                # dataDf.at[idx, "spatialCoverageForPOI1_Other"] = -100
                 dataDf.at[idx, "spatialCoverageForPOI2"] = -100
-                dataDf.at[idx, "spatialCoverageForPOI2_BuiltUp"] = -100
-                dataDf.at[idx, "spatialCoverageForPOI2_Other"] = -100
+                # dataDf.at[idx, "spatialCoverageForPOI2_BuiltUp"] = -100
+                # dataDf.at[idx, "spatialCoverageForPOI2_Other"] = -100
                 dataDf.at[idx, "spatialCoverageForPOI3"] = -100
-                dataDf.at[idx, "spatialCoverageForPOI3_BuiltUp"] = -100
-                dataDf.at[idx, "spatialCoverageForPOI3_Other"] = -100
+                # dataDf.at[idx, "spatialCoverageForPOI3_BuiltUp"] = -100
+                # dataDf.at[idx, "spatialCoverageForPOI3_Other"] = -100
                 dataDf.at[idx, "spatialCoverageForPop"] = -100
-                dataDf.at[idx, "spatialCoverageForPop_BuiltUp"] = -100
-                dataDf.at[idx, "spatialCoverageForPop_Other"] = -100
+                # dataDf.at[idx, "spatialCoverageForPop_BuiltUp"] = -100
+                # dataDf.at[idx, "spatialCoverageForPop_Other"] = -100
                 bar.update()
                 continue
             
@@ -172,26 +172,26 @@ def __processByCountry(
             evcsBuffer = projectGeom(evcsBuffer, utm, 4326)
             del geomUTM
             
-            # Get built-up area
-            builtUp = builtUpAll[builtUpAll.intersects(geom)]
-            assert isinstance(builtUp, gpd.GeoSeries)
-            if builtUp.shape[0] == 0:
-                builtUpUnion = None
-                # Spatial coverage
-                dataDf.at[idx, "spatialCoverage_BuiltUp"] = -100
-                dataDf.at[idx, "spatialCoverage_Other"] = sCover
-            else:
-                bar.set_description(f"Calculating builti-up area spatial coverage of EVCS for {city:<25.25}") # <max.min
-                builtUpUnion = builtUp.union_all().intersection(geom)
-                buildUpArea = projectGeom(builtUpUnion, 4326, utm).area
-                evcsInBuiltUpArea = projectGeom(evcsBuffer.intersection(builtUpUnion), 4326, utm).area
-                dataDf.at[idx, "spatialCoverage_BuiltUp"] = evcsInBuiltUpArea / buildUpArea
-                dataDf.at[idx, "spatialCoverage_Other"] = (evcsArea - evcsInBuiltUpArea) / (geomArea - buildUpArea) if geomArea > buildUpArea else -100
+            # # Get built-up area
+            # builtUp = builtUpAll[builtUpAll.intersects(geom)]
+            # assert isinstance(builtUp, gpd.GeoSeries)
+            # if builtUp.shape[0] == 0:
+            #     builtUpUnion = None
+            #     # Spatial coverage
+            #     dataDf.at[idx, "spatialCoverage_BuiltUp"] = -100
+            #     dataDf.at[idx, "spatialCoverage_Other"] = sCover
+            # else:
+            #     bar.set_description(f"Calculating builti-up area spatial coverage of EVCS for {city:<25.25}") # <max.min
+            #     builtUpUnion = builtUp.union_all().intersection(geom)
+            #     buildUpArea = projectGeom(builtUpUnion, 4326, utm).area
+            #     evcsInBuiltUpArea = projectGeom(evcsBuffer.intersection(builtUpUnion), 4326, utm).area
+            #     dataDf.at[idx, "spatialCoverage_BuiltUp"] = evcsInBuiltUpArea / buildUpArea
+            #     dataDf.at[idx, "spatialCoverage_Other"] = (evcsArea - evcsInBuiltUpArea) / (geomArea - buildUpArea) if geomArea > buildUpArea else -100
 
             bar.set_description(f"Calculating POI and population spatial coverage of EVCS for {city:<25.25}") # <max.min
             # POI
             future = executor.submit(
-                _calculatePOI, poiDf, geom, evcsBuffer, builtUpUnion
+                _calculatePOI, poiDf, geom, evcsBuffer #, builtUpUnion
             )
             futuresPOI.append(future)
             futureDictPOI[future] = idx
@@ -199,7 +199,7 @@ def __processByCountry(
             #Population
             if popPath is not None:
                 future = executor.submit(
-                    _calculatePop, popPath, geom, evcsBuffer, builtUpUnion
+                    _calculatePop, popPath, geom, evcsBuffer #, builtUpUnion
                 )
                 futuresPop.append(future)
                 futureDictPop[future] = (idx, False) # idx, pop
@@ -212,14 +212,14 @@ def __processByCountry(
                 result = future.result()
                 if result is not None:
                     dataDf.at[idx, "spatialCoverageForPOI1"] = result[0]
-                    dataDf.at[idx, "spatialCoverageForPOI1_BuiltUp"] = result[1]
-                    dataDf.at[idx, "spatialCoverageForPOI1_Other"] = result[2]
+                    # dataDf.at[idx, "spatialCoverageForPOI1_BuiltUp"] = result[1]
+                    # dataDf.at[idx, "spatialCoverageForPOI1_Other"] = result[2]
                     dataDf.at[idx, "spatialCoverageForPOI2"] = result[3]
-                    dataDf.at[idx, "spatialCoverageForPOI2_BuiltUp"] = result[4]
-                    dataDf.at[idx, "spatialCoverageForPOI2_Other"] = result[5]
+                    # dataDf.at[idx, "spatialCoverageForPOI2_BuiltUp"] = result[4]
+                    # dataDf.at[idx, "spatialCoverageForPOI2_Other"] = result[5]
                     dataDf.at[idx, "spatialCoverageForPOI3"] = result[6]
-                    dataDf.at[idx, "spatialCoverageForPOI3_BuiltUp"] = result[7]
-                    dataDf.at[idx, "spatialCoverageForPOI3_Other"] = result[8]
+                    # dataDf.at[idx, "spatialCoverageForPOI3_BuiltUp"] = result[7]
+                    # dataDf.at[idx, "spatialCoverageForPOI3_Other"] = result[8]
                 bar.update(0.5)
             except Exception as e:
                 raise RuntimeError(f"Error processing POI for index {idx}: {e}")
@@ -230,8 +230,8 @@ def __processByCountry(
                 result = future.result()
                 if result is not None:
                     dataDf.at[idx, "spatialCoverageForPop"] = result[0]
-                    dataDf.at[idx, "spatialCoverageForPop_BuiltUp"] = result[1]
-                    dataDf.at[idx, "spatialCoverageForPop_Other"] = result[2]
+                    # dataDf.at[idx, "spatialCoverageForPop_BuiltUp"] = result[1]
+                    # dataDf.at[idx, "spatialCoverageForPop_Other"] = result[2]
                 bar.update(0.5)
             except Exception as e:
                 raise RuntimeError(f"Error processing population for index {idx}: {e}")
@@ -241,7 +241,7 @@ def __processByCountry(
 def _calculatePop(
     popPath: str,
     geom: BaseGeometry, evcsBuffer: BaseGeometry,
-    builtUpUnion: BaseGeometry | None,
+    # builtUpUnion: BaseGeometry | None,
 ) -> tuple[float, float, float] | None:
     # Population data is WGS84, no need for projection
     if geom.is_empty: return
@@ -283,35 +283,35 @@ def _calculatePop(
 
         totalCover = EVCSCoveredPop / totalPop
         
-        # Calcualte population in built-up area and other area
-        if builtUpUnion is not None:
-            # Total Pop
-            maskBuiltup = geometry_mask(
-                [builtUpUnion],
-                out_shape=rasterCity.shape,
-                transform=transformCity,
-                invert=True
-            )
-            popBuiltup = np.sum(rasterCity[maskBuiltup & validMask], dtype=np.float64)
-            popOther = totalPop - popBuiltup
-            # Covered Pop
-            coveredBuiltup = np.sum(rasterCity[maskEVCS & maskBuiltup & validMask], dtype=np.float64)
-            coveredOther = EVCSCoveredPop - coveredBuiltup
+        # # Calcualte population in built-up area and other area
+        # if builtUpUnion is not None:
+        #     # Total Pop
+        #     maskBuiltup = geometry_mask(
+        #         [builtUpUnion],
+        #         out_shape=rasterCity.shape,
+        #         transform=transformCity,
+        #         invert=True
+        #     )
+        #     popBuiltup = np.sum(rasterCity[maskBuiltup & validMask], dtype=np.float64)
+        #     popOther = totalPop - popBuiltup
+        #     # Covered Pop
+        #     coveredBuiltup = np.sum(rasterCity[maskEVCS & maskBuiltup & validMask], dtype=np.float64)
+        #     coveredOther = EVCSCoveredPop - coveredBuiltup
 
-            builtUpCover = coveredBuiltup / popBuiltup if popBuiltup > 0 else -100
-            otherCover = coveredOther / popOther if popOther > 0 else -100
+        #     builtUpCover = coveredBuiltup / popBuiltup if popBuiltup > 0 else -100
+        #     otherCover = coveredOther / popOther if popOther > 0 else -100
             
-        else:
-            builtUpCover = -100
-            otherCover = totalCover
+        # else:
+        #     builtUpCover = -100
+        #     otherCover = totalCover
 
-    return totalCover, builtUpCover, otherCover
+    return totalCover, 0, 0 # builtUpCover, otherCover
     # spatialCoverageForPop, spatialCoverageForPop_BuiltUp, spatialCoverageForPop_Other
 
 def _calculatePOI(
     poiDf: gpd.GeoDataFrame,
     geom: BaseGeometry, evcsBuffer: BaseGeometry,
-    builtUpUnion: BaseGeometry | None
+    # builtUpUnion: BaseGeometry | None
 ) -> np.ndarray | None:
     if geom.is_empty:
         return
@@ -329,11 +329,13 @@ def _calculatePOI(
     
     # Intersection
     inEVCS = cityPOI.within(evcsBuffer)
-    if builtUpUnion is not None:
-        inBuiltup = cityPOI.intersects(builtUpUnion)
-    else:
-        inBuiltup = None
-    del builtUpUnion
+
+    ## Built-up area
+    # if builtUpUnion is not None:
+    #     inBuiltup = cityPOI.intersects(builtUpUnion)
+    # else:
+    #     inBuiltup = None
+    # del builtUpUnion
     
     # By category
     result = np.full([3, 3], np.nan, dtype=np.float64)
@@ -347,21 +349,21 @@ def _calculatePOI(
         coverdPOI = inEVCS[cat].sum()
         result[i-1][0] = coverdPOI / totalPOI
 
-        # Built-up area
-        if inBuiltup is None:
-            result[i-1][1] = -100
-            result[i-1][2] = result[i-1][0]
-            continue
+        # # Built-up area
+        # if inBuiltup is None:
+        #     result[i-1][1] = -100
+        #     result[i-1][2] = result[i-1][0]
+        #     continue
 
-        builtupMask = inBuiltup[cat]
-        totalBuiltUp = builtupMask.sum()
-        if totalBuiltUp == 0:
-            result[i-1][2] = result[i-1][0]
-            continue
+        # builtupMask = inBuiltup[cat]
+        # totalBuiltUp = builtupMask.sum()
+        # if totalBuiltUp == 0:
+        #     result[i-1][2] = result[i-1][0]
+        #     continue
 
-        builtUpCover = (inEVCS[cat] & inBuiltup[cat]).sum()
-        result[i-1][1] = builtUpCover / totalBuiltUp
-        result[i-1][2] = (coverdPOI - builtUpCover) / (totalPOI - totalBuiltUp) if totalPOI > totalBuiltUp else -100
+        # builtUpCover = (inEVCS[cat] & inBuiltup[cat]).sum()
+        # result[i-1][1] = builtUpCover / totalBuiltUp
+        # result[i-1][2] = (coverdPOI - builtUpCover) / (totalPOI - totalBuiltUp) if totalPOI > totalBuiltUp else -100
 
     return result.flatten()
     # POI1, POI1_BuiltUp, POI1_Other, POI2, POI2_BuiltUp, POI2_Other, POI3, POI3_BuiltUp, POI3_Other

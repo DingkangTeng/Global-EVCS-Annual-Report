@@ -19,12 +19,12 @@ def renewableEnergy(
     bar = data.bar("Calculating spatial coverage of EVCS", 1)
     col = "solar_1"
     dataDf[col] = np.nan
-    col_2 = "solar_2"
-    dataDf[col_2] = np.nan
+    # col_2 = "solar_2" # 可以删
+    # dataDf[col_2] = np.nan
     col2 = "wind_1"
     dataDf[col2] = np.nan
-    col2_2 = "wind_2"
-    dataDf[col2_2] = np.nan
+    # col2_2 = "wind_2" # 可以删
+    # dataDf[col2_2] = np.nan
 
     evcsDf = gpd.read_file(evcs, layer="evcs", encoding="utf-8").geometry
 
@@ -38,9 +38,9 @@ def renewableEnergy(
     bar.set_description("Saving results for renewable energy.")
     data.updateData(
         (col, "REAL", None, False),
-        (col_2, "REAL", None, False),
+        # (col_2, "REAL", None, False),
         (col2, "REAL", None, False),
-        (col2_2, "REAL", None, False)
+        # (col2_2, "REAL", None, False)
     )
     bar.update()
     bar.close()
@@ -65,22 +65,22 @@ def __process(
 
         if evcs.shape[0] <= evcsThres:
             dataDf.at[idx, "solar_1"] = -100
-            dataDf.at[idx, "solar_2"] = -100
+            # dataDf.at[idx, "solar_2"] = -100
             dataDf.at[idx, "wind_1"] = -100
-            dataDf.at[idx, "wind_2"] = -100
+            # dataDf.at[idx, "wind_2"] = -100
             bar.update()
             continue
         
         if geom.intersects(solarPoly):
-            dataDf.at[idx, "solar_1"], dataDf.at[idx, "solar_2"] = __processRaster(srcSolar, geom, evcs)
+            dataDf.at[idx, "solar_1"] = __processRaster(srcSolar, geom, evcs)
         if geom.intersects(windPoly):
-            dataDf.at[idx, "wind_1"], dataDf.at[idx, "wind_2"] = __processRaster(srcWind, geom, evcs)
+            dataDf.at[idx, "wind_1"] = __processRaster(srcWind, geom, evcs)
 
         bar.update()
 
     return
 
-def __processRaster(src: Any, geom: BaseGeometry, evcs: gpd.pd.Series) -> tuple[float, float]:
+def __processRaster(src: Any, geom: BaseGeometry, evcs: gpd.pd.Series) -> float:
     raster: np.ndarray
     raster, _ = mask(
         src,
@@ -95,7 +95,7 @@ def __processRaster(src: Any, geom: BaseGeometry, evcs: gpd.pd.Series) -> tuple[
     raster = raster[validMask]
 
     if not validMask.any():
-        return np.nan, np.nan
+        return np.nan
 
     # top 25%
     threshold = np.percentile(raster, 75)
@@ -104,9 +104,9 @@ def __processRaster(src: Any, geom: BaseGeometry, evcs: gpd.pd.Series) -> tuple[
     values = values[(values != src.nodata) & (~np.isnan(values))]
     top25 = np.sum(values >= threshold) / evcs.shape[0]
 
-    # Percentile
-    percentiles = np.array([
-        percentileofscore(raster, v, kind='mean') for v in values
-    ])
+    # # Percentile
+    # percentiles = np.array([
+    #     percentileofscore(raster, v, kind='mean') for v in values
+    # ])
     
-    return top25, float(np.mean(percentiles))
+    return top25 #, float(np.mean(percentiles))

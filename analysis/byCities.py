@@ -37,6 +37,8 @@ class analysisByCities:
                 self.cdf = gpd.read_file(self.gpkg, layer=clayer, encoding="utf-8")
             else:
                 overrides[1] = True
+        else:
+            overrides = [True, True]
 
         # Creat city level result
         if overrides[0]:

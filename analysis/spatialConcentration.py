@@ -14,12 +14,15 @@ def spatialConcentration(data: analysisByCities, evcsThres: int = 10):
     bar = data.bar("Calculating spatial concentration of EVCS", 1)
     col = "spatialConcentration"
     df[col] = np.nan
-    col2 = "spatialConcentration_BuiltUp"
+    col2 = "spatialConcentration_BuiltUp" # 可以删
     df[col2] = np.nan
-    col3 = "spatialConcentration_Other"
+    col3 = "spatialConcentration_Other" # 可以删
     df[col3] = np.nan
 
-    with rio.open(os.path.join(data.savePath, "evcs.tif"), options=["NUM_THREADS=ALL_CPUS"]) as src:
+    with (
+        rio.Env(GDAL_NUM_THREADS="ALL_CPUS"),
+        rio.open(os.path.join(data.savePath, "evcs.tif"), options=["NUM_THREADS=ALL_CPUS"]) as src
+    ):
         if dfCrs != src.crs.to_epsg(): df = df.to_crs(src.crs)
 
         # Filter outside data
