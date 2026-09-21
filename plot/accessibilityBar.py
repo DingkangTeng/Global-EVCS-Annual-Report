@@ -94,9 +94,9 @@ class plotAcccessibilityBar(languageTemplate):
         int_matrix = np.zeros((n_bars, n_groups), dtype=int)
 
         for bar_idx in range(n_bars):
-            # 取出该条形对应的三个分段百分比（浮点值）
+            # Retrieve the three segment percentages (floating) corresponding to the bar
             segment_vals = [df[label].iloc[bar_idx] for label in labels]
-            # 调用取整补偿函数，返回三个整数且和为100
+            # Call the rounding compensation function to return three integers that sum to 100
             int_segments = self.__roundFix(segment_vals)
             for g_idx, int_val in enumerate(int_segments):
                 int_matrix[bar_idx, g_idx] = int_val
@@ -150,14 +150,6 @@ class plotAcccessibilityBar(languageTemplate):
         ax.set_xticks([])
         ax.set_xlabel('')
 
-        # ax.legend(
-        #     handles=[Patch(facecolor=color) for color in colors],
-        #     labels=labels,
-        #     loc="lower center",
-        #     bbox_to_anchor=(0.5, -0.05),
-        #     ncols=len(labels),
-        # )
-
         # Remove edges
         for spine in ["top", "right", "bottom", "left"]:
             ax.spines[spine].set_visible(False)
@@ -177,11 +169,14 @@ class plotAcccessibilityBar(languageTemplate):
     
     @staticmethod
     def __roundFix(vals, total=100):
-        """将 vals 四舍五入取整，并通过调整最大项使总和等于 total"""
+        """
+        Round the values in vals to the nearest integer,
+        and adjust the largest element so that the sum equals total
+        """
         intVals = [int(round(v)) for v in vals]
         diff = total - sum(intVals)
         if diff != 0:
-            # 将差值加到原始值最大的分段上
+            # Add the difference to the segment with the largest original value
             idx = np.argmax(vals)
             intVals[idx] += diff
         return intVals

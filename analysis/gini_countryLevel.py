@@ -34,17 +34,7 @@ def gini_Country(
         # if iso3 != "HKG": continue # debug
         bar.set_postfix(iso3=iso3)
 
-        popPath = pop
-        # popPath = os.path.join(
-        #     pop,
-        #     "population_All",
-        #     "{}_allGender_[0, 1, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90]_merge.tif".format(iso3)
-        # )
-
-        # if not os.path.exists(popPath):
-        #     bar.update()
-        #     continue
-        
+        popPath = pop # API interfce
         subEVCSDf = evcsDf.loc[evcsDf["level1"] == iso3].geometry
 
         __processByCountry(
@@ -114,7 +104,7 @@ def __processByCountry(
         XCoords = evcsGeoSub.x.to_numpy() # type: ignore
         YCoords = evcsGeoSub.y.to_numpy() # type: ignore
 
-        # 统计每个像素的EVCS数量
+        # Count the number of EVCSs for each pixel
         rows, cols = rowcol(popTransform, XCoords, YCoords)
         rows = np.clip(rows, 0, pop.shape[0] - 1)
         cols = np.clip(cols, 0, pop.shape[1] - 1)

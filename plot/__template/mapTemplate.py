@@ -4,13 +4,9 @@ import seaborn as sns
 from rasterio.transform import Affine
 from rasterio.plot import show as rshow
 from matplotlib_scalebar.scalebar import ScaleBar
-# import matplotlib.patheffects as patheffects
 from matplotlib.lines import Line2D
-# from adjustText import adjust_text
-# from shapely.geometry import Point
 from matplotlib.patches import Patch
 from matplotlib.ticker import LinearLocator, PercentFormatter
-from matplotlib.colorbar import Colorbar
 from typing import Union
 
 from __plot import plt, NOTE_SIZE, BAR_COLORS, BAR_COLORS_TRANS
@@ -77,60 +73,9 @@ class mapTemplate:
                 linewidth=0.5
             )
 
-        # # Plot invalid data
-        # if dfInvalid.shape[0] > 0:
-        #     dfInvalid.plot(
-        #         ax = ax,
-        #         facecolor="none",
-        #         edgecolor="gray",
-        #         hatch="///",
-        #         linewidth=0.5
-        #     )
-
         # Plot province boundary
         if level2.shape[0] > 0:
             level2.boundary.plot(ax=ax, edgecolor="black", linewidth=0.8)
-
-        # # Plot main cities
-        # if iso3 != "Global" and mainCities is not None and mainCities.shape[0] > 0:
-        #     mainCities.plot(
-        #         ax=ax,
-        #         markersize=25, color="white", edgecolor="black",
-        #         linewidth=1,
-        #         zorder=10
-        #     )
-        #     texts = []
-        #     for row in mainCities.itertuples():
-        #         point: Point = getattr(row, "geometry")
-        #         name = getattr(row, "level3")
-        #         x = point.x
-        #         y = point.y
-        #         texts.append(
-        #             ax.text(
-        #                 x, y+2000,
-        #                 name,
-        #                 fontsize=NOTE_SIZE*0.8,
-        #                 fontfamily="Times New Roman",
-        #                 ha="center", va="bottom",
-        #                 path_effects=[
-        #                     patheffects.Stroke(linewidth=2, foreground='white'),
-        #                     patheffects.Normal()
-        #                 ],
-        #                 zorder=11
-        #             )
-        #         )
-            
-        #     # Adjust text space to avoid override
-        #     if iso3 != "AK" and iso3 != "HA" and iso3 != "USA":
-        #         adjust_text(
-        #             texts,
-        #             ax=ax,
-        #             autoalign="xy",
-        #             expand_points=(5000, 5000),
-        #             expand_text=(5000, 5000),
-        #             force_points=(0.8, 0.8),
-        #             arrowprops=dict(arrowstyle='-', color='gray', lw=0.5)
-        #         )
 
         # Scale bar for formating
         if iso3 != "AK" and iso3 != "HA" and iso3 != "JDX":
@@ -139,15 +84,6 @@ class mapTemplate:
         if otherLayer is not None:
             for layer in otherLayer:
                 layer.plot(ax=ax, edgecolor="black", linewidth=0.8)
-
-        # # Note
-        # if note is not None:
-        #     ax.text(
-        #         note["x"], note["y"], note["text"],
-        #         transform=ax.transAxes,
-        #         ha=note["ha"], va=note["va"],
-        #         fontsize=note.get("fontsize", NOTE_SIZE), weight="bold",
-        #     )
 
         # Beauty
         ax.grid(False)

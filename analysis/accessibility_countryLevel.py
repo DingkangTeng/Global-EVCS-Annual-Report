@@ -194,12 +194,6 @@ def _processByCountry(
         rowStart = max(0, int(window.row_off))
         colStart = max(0, int(window.col_off))
         aligned = (srcAcc.transform == src.transform) and (srcAcc.shape == src.shape)
-        
-        # rowStop = min(rows, rowStart + int(window.height))
-        # colStop = min(cols, colStart + int(window.width))
-        # window = windows.Window(colStart, rowStart, colStop - colStart, rowStop - rowStart) # type: ignore
-        # windowH = rowStop - rowStart
-        # windowW = colStop - colStart
 
         ## Get max index
         stats = srcAcc.stats(indexes=1)[0]
@@ -220,20 +214,21 @@ def _processByCountry(
 
         for y in range(0, windowH, blockSize):
             for x in range(0, windowW, blockSize):
-                # 当前块的宽高
+                # Width and height of the current block
                 w = min(blockSize, windowW - x)
                 h = min(blockSize, windowH - y)
                 blockWindow = windows.Window(
                     colStart + x, rowStart + y, w, h # type: ignore
                 )
-                # 读取人口块
+                # Read population block
                 popBlock = src.read(1, window=blockWindow)
-                # 读取可达性块（假设两栅格完全对齐）
+                # Read accessibility block
+                # Grids generated based on population are perfectly aligned
                 if aligned:
                     accBlock = srcAcc.read(1, window=blockWindow)
                     blockTrans = src.window_transform(blockWindow)
                 else:
-                    # 重采样到与人口块相同的形状和变换
+                    # Resample to the same shape and transform as the population blocks in special casse
                     accBlock = np.zeros((h, w), dtype=np.float64)
                     blockTrans = src.window_transform(blockWindow)
                     warp.reproject(
@@ -248,11 +243,11 @@ def _processByCountry(
                         dst_nodata=srcAcc.nodata
                     )
 
-                # 几何掩膜
+                # Geometry mask
                 _processBlock(
                     popBlock, accBlock, blockTrans,
                     geom, builtUp,
-                    h, w, blockWindow, nodata,
+                    h, w, nodata,
                     calUrbanArea,
                     popTotalAcc
                 )
@@ -275,11 +270,10 @@ def _processByCountry(
 
     return result
 
-
 def _processBlock(
     popBlock: np.ndarray, accBlock: np.ndarray, blockTrans: Any,
     geom: BaseGeometry, builtUp: gpd.GeoSeries | None,
-    h: int, w: int, blockWindow: windows.Window, nodata: Any,
+    h: int, w: int, nodata: Any,
     calUrbanArea: bool,
     popTotalAcc: np.ndarray
 ) -> None:
@@ -290,17 +284,18 @@ def _processBlock(
         invert=True
     )
 
-    # 有效像素掩膜
+    # Valid raster mask
     valid = ~np.isnan(popBlock) & ~np.isnan(accBlock)
     if nodata is not None:
         valid &= (popBlock != nodata)
-    # 假设 acc 的 nodata 已在前面检查过（有 nan 即无效）
+    # The `nodata` value for `acc` has already been checked 
+    # presence of NaN implies invalidity
     valid &= geomMask
 
     if not np.any(valid):
         return
 
-    # 提取有效数据
+    # Get the valid data
     popValid = popBlock[valid]
     accValid = accBlock[valid]
     accValid = np.round(accValid * 100).astype(np.uint32)
@@ -308,24 +303,8 @@ def _processBlock(
     np.add.at(popTotalAcc[0], accValid, popValid)
 
     if calUrbanArea:
-        # 计算当前块的建成区掩膜
+        # Calculate the built-up area mask for the current block
         if builtUp is not None and not builtUp.empty:
-            # # 仅对与 builtupGeom 有交集的块做栅格化，提高效率
-            # possible = builtUp.sindex.intersection(
-            #     windows.bounds(blockWindow, blockTrans)
-            # )
-            
-            # # 简单起见直接栅格化整个小块，geometry_mask 会自动处理超出边界的部分
-            # if possible.size > 0:
-            #     builtupMask = features.geometry_mask(
-            #         builtUp.iloc[possible],
-            #         out_shape=(h, w),
-            #         transform=blockTrans,
-            #         invert=True,
-            #         all_touched=False
-            #     )[valid]
-            # else:
-            #     builtupMask = np.zeros(popValid.shape, dtype=np.bool)
             builtupMask = features.geometry_mask(
                 builtUp,
                 out_shape=(h, w),
@@ -337,13 +316,5 @@ def _processBlock(
 
         np.add.at(popTotalAcc[1], accValid, popValid * builtupMask) # Built-up
         np.add.at(popTotalAcc[2], accValid, popValid * (~builtupMask)) # Non built-up
-        
-        # # Debug
-        # if builtupMask.sum() > 0:
-        #     pop_in_builtup = popValid[builtupMask].sum()
-        #     print(f"  建成区掩膜像素数: {builtupMask.sum()}, 人口总和: {pop_in_builtup}")
-        #     print(f"最终 popTotalAcc[1] 总和: {popTotalAcc[1].sum()}")
-        #     print(f"popTotalAcc 第1行非零个数: {np.count_nonzero(popTotalAcc[1])}")
-        #     print(popTotalAcc)
 
     return

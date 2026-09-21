@@ -2,11 +2,8 @@ from .accessibility import accessibility
 from .accessibility_countryLevel import accessibility_Country
 from .byCities import analysisByCities
 from .byCountries import exportCountryLevel
-from .gini import gini
 from .gini_countryLevel import gini_Country
-from .poiGini import poiGini
 from .renewableEnergy import renewableEnergy
-from .spatialConcentration import spatialConcentration
 from .spatialConcentration_countryLevel import spatialConcentration_Country
 from .spatialCoverage import spatialCoverage
 from .spatialCoverage_countryLevel import spatialCoverage_Country

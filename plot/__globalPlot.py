@@ -146,10 +146,8 @@ class globalPlot:
 
         # Saperate
         df = df[df.index.isin(CHN | ASEAN | {"JPN", "KOR"} | {"USA", "CAN"} | {"AUS", "NZL"} | GS | EUR)]
-        # df1 = df[~df.index.isin(EUR)]
-        # df2 = df[df.index.isin(EUR)]
 
-        for sub, name in [(df, "all")]: #, (df1, "1"), (df2, "2")]:
+        for sub, name in [(df, "all")]:
             # Rename country
             sub = self.__sortByISO(sub)
             sub = self.__renameISO(sub, renameCol=True, heat=True)

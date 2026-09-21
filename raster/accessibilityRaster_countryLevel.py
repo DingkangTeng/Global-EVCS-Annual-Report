@@ -193,12 +193,12 @@ def __processBlock(
     with rio.open(popPath) as blockSrc:
         popArray = blockSrc.read(1, window=blockWindowdow)
 
-    # 有效像元掩膜
+    # Valid raster mask
     valid = ~np.isnan(popArray)
     if nodata is not None:
         valid &= (popArray != nodata)
 
-    # 几何体掩膜
+    # Geometry mask
     geom_mask = features.geometry_mask(
         [geom],
         out_shape=popArray.shape,
@@ -217,11 +217,11 @@ def __processBlock(
     xs, ys = transform * (globalCols, globalRows) # type: ignore
     popCoords = np.radians(np.column_stack([ys, xs]))
 
-    # 查询最近充电站距离（弧度）
+    # Query the distance to the nearest charging station (in radians)
     distances, _ = tree.query(popCoords, k=1)
     distances = distances.flatten() * 6371000.0
 
-    # 生成块的结果数组
+    # Result array of generated blocks
     blockDist = np.full(popArray.shape, np.nan, dtype=np.float32)
     blockDist[rowsIdx, colsIdx] = distances.astype(np.float32)
 

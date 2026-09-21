@@ -3,7 +3,6 @@ import geopandas as gpd
 import numpy as np
 import rasterio as rio
 from rasterio.mask import mask
-from scipy.stats import percentileofscore
 from tqdm import tqdm
 from shapely.geometry import box
 from shapely.geometry.base import BaseGeometry
@@ -19,12 +18,8 @@ def renewableEnergy(
     bar = data.bar("Calculating spatial coverage of EVCS", 1)
     col = "solar_1"
     dataDf[col] = np.nan
-    # col_2 = "solar_2" # 可以删
-    # dataDf[col_2] = np.nan
     col2 = "wind_1"
     dataDf[col2] = np.nan
-    # col2_2 = "wind_2" # 可以删
-    # dataDf[col2_2] = np.nan
 
     evcsDf = gpd.read_file(evcs, layer="evcs", encoding="utf-8").geometry
 
@@ -38,9 +33,7 @@ def renewableEnergy(
     bar.set_description("Saving results for renewable energy.")
     data.updateData(
         (col, "REAL", None, False),
-        # (col_2, "REAL", None, False),
-        (col2, "REAL", None, False),
-        # (col2_2, "REAL", None, False)
+        (col2, "REAL", None, False)
     )
     bar.update()
     bar.close()
@@ -65,9 +58,7 @@ def __process(
 
         if evcs.shape[0] <= evcsThres:
             dataDf.at[idx, "solar_1"] = -100
-            # dataDf.at[idx, "solar_2"] = -100
             dataDf.at[idx, "wind_1"] = -100
-            # dataDf.at[idx, "wind_2"] = -100
             bar.update()
             continue
         
@@ -103,10 +94,5 @@ def __processRaster(src: Any, geom: BaseGeometry, evcs: gpd.pd.Series) -> float:
     values = np.array([val[0] for val in src.sample(coords)])
     values = values[(values != src.nodata) & (~np.isnan(values))]
     top25 = np.sum(values >= threshold) / evcs.shape[0]
-
-    # # Percentile
-    # percentiles = np.array([
-    #     percentileofscore(raster, v, kind='mean') for v in values
-    # ])
     
-    return top25 #, float(np.mean(percentiles))
+    return top25

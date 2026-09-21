@@ -358,15 +358,6 @@ class plotCities(mapTemplate, baseTemplate):
             } if iso3 == "GS" else None
         )
 
-        # ## Add legend
-        # legend = [
-        #     Patch(facecolor=color, label=cat) for cat, color in colorMapping.items()
-        # ]
-        # legend.append(
-        #     Patch(facecolor="whitesmoke", label="N.A.")
-        # )
-        # self._legend(iso3, _CITIES_STD_LEGEND[columnName][self.language], ax, legend)
-
         plt.plot(
             savePath, "map_{}.jpg".format(self.__COLS_STD_NAME.get(columnName, columnName)),
             fig=fig, bbox_inches="tight"

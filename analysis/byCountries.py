@@ -20,7 +20,7 @@ def exportCountryLevel(data: analysisByCities, savePath: str) -> pd.DataFrame:
             REGION[i] = rname
 
     # City level data
-    df = data.df[["iso3_code", "spatialConcentration"]]
+    df = data.df[["iso3_code", "spatialConcentration", "solar_1", "wind_1"]]
     df.replace(-100, np.nan, inplace=True)
     df.dropna(how="all", inplace=True)
 
@@ -28,11 +28,14 @@ def exportCountryLevel(data: analysisByCities, savePath: str) -> pd.DataFrame:
     result = data.cdf.set_index("iso3_code").drop(columns=["geometry"]) # Using city level spatial concentration
     result.replace(-100, np.nan, inplace=True)
     result["spatialConcentration"] = np.nan
+    result["solar_1"] = np.nan
+    result["wind_1"] = np.nan
 
     # Add city leve data into country level
     for iso3, subdf in df.groupby("iso3_code"):
-        m = subdf["spatialConcentration"].median()
-        result.at[iso3, "spatialConcentration"] = m
+        result.at[iso3, "spatialConcentration"] = subdf["spatialConcentration"].median()
+        result.at[iso3, "solar_1"] = subdf["solar_1"].median()
+        result.at[iso3, "wind_1"] = subdf["wind_1"].median()
 
     result.dropna(how="all", inplace=True)
     iso3s = result.index.to_series()
