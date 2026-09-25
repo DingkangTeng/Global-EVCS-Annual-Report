@@ -47,25 +47,55 @@ FIG_ROOT/fig_en/ or FIG_ROOT/fig_zh/
 
 ---
 
-## Quick Start: Bundled Sample Data
+## Installation and Sample Data
 
-The repository includes [`sample.ipynb`](sample.ipynb) and [`__sampleData/`](__sampleData/) for a small example. Run the notebook from the **repository root** so its relative paths resolve. Its paths use Windows backslashes; on macOS or Linux, change those paths to forward slashes or use `pathlib.Path`.
+### Python Requirements
 
-1. Clone the repository and open its root directory as the notebook working directory.
-2. Create and activate a Python virtual environment, install the dependencies from the repository root:
+The project's pinned Python dependencies are listed in [`requirements.txt`](requirements.txt):
+
+| Package | Version |
+|---|---|
+| GDAL | 3.12.2 |
+| GeoPandas | 1.1.3 |
+| Matplotlib | 3.11.2 |
+| matplotlib-scalebar | 0.9.0 |
+| NumPy | 2.5.3 |
+| pandas | 3.0.6 |
+| pyproj | 3.7.2 |
+| Rasterio | 1.5.0 |
+| scikit-learn | 1.9.1 |
+| SciPy | 1.18.1 |
+| Seaborn | 0.13.2 |
+| Shapely | 2.1.2 |
+| tqdm | 4.67.3 |
+| HDX Python API | 6.7.0 |
+
+### Sample Data
+
+The repository includes [`requirements.txt`](requirements.txt), [`sample.ipynb`](sample.ipynb), and [`__sampleData/`](__sampleData/). The notebook uses paths relative to the **repository root**. The checked-in notebooks record Python 3.14.3 as their authoring environment; the dependency versions in `requirements.txt` are pinned, so use a compatible Python installation.
+
+1. Clone the repository and work from its root directory:
 
    ```bash
+   git clone https://github.com/DingkangTeng/Global-EVCS-Annual-Report.git
+   cd Global-EVCS-Annual-Report
    python -m venv .venv
-   # Windows PowerShell: .\.venv\Scripts\Activate.ps1
-   # macOS/Linux: source .venv/bin/activate
+   ```
+
+2. Activate the virtual environment and install dependencies. In **Windows PowerShell**:
+
+   ```powershell
+   .\.venv\Scripts\Activate.ps1
    python -m pip install -r requirements.txt
    ```
 
-   Until that file is uploaded, install Jupyter and the packages imported by the workflow manually (including GeoPandas, Rasterio, pandas, NumPy, SciPy, Matplotlib, Seaborn, scikit-learn, tqdm, pyproj, Shapely, and matplotlib-scalebar). Your environment also needs drivers that can read GeoPackage, File Geodatabase, Parquet, and GeoTIFF inputs.
-3. Open `sample.ipynb` and run cells in order. The first code cell points to the included station, POI, population, boundary, built-up-area, and map-element inputs. It sets `RESULTS_ROOT = r"__sampleData\data"` and `FIG_ROOT = r"__sampleData"`.
-4. Inspect the generated results in `__sampleData/data/` and English figures in `__sampleData/fig_en/`. These directories already contain sample outputs, so rerunning analysis can overwrite existing files. Make a copy first if you want to preserve them.
+   In **macOS/Linux**, activate it with `source .venv/bin/activate`, then run the same two `python -m pip install` commands. The pinned `gdal` package may require a compatible local GDAL installation on some systems; installation of the Python packages alone does not guarantee support for all GIS data drivers.
 
-The sample includes only the USA study area represented by **Los Angeles, California**; it is intended for checking the workflow, not reproducing global rankings. Use `"USA"` for regional maps and `iso3s=["USA"]` for accessibility bars. The sample notebook calls `plot.drawOverall()`, but global comparisons based on this limited sample should not be interpreted as report-wide results. Full results require the corresponding full input datasets and `main_2025.ipynb` paths must be changed from the original local drives.
+3. Launch `python -m jupyterlab` from the repository root, select the virtual environment's Python kernel, open `sample.ipynb`, and run its cells in order. Its first cell sets `RESULTS_ROOT = r"__sampleData\data"` and `FIG_ROOT = r"__sampleData"`. The notebook paths use Windows backslashes: on macOS/Linux, change these paths to forward slashes or construct them with `pathlib.Path`.
+
+4. Inspect the generated outputs in `__sampleData/data/` and figures in `__sampleData/fig_en/`. The repository already includes sample outputs; rerunning the analysis can overwrite them.
+
+The sample covers a limited USA study area (Los Angeles, California), so use `"USA"` for maps and `iso3s=["USA"]` for accessibility bars. `plot.drawOverall()` can produce charts, but its country rankings on this sample are not global report results. For the complete study, obtain the remaining country inputs and edit the absolute paths in `main_2025.ipynb`.
 
 ---
 
