@@ -11,7 +11,7 @@ The workflow integrates EV charging-station locations with population rasters, p
 - solar- and wind-energy potential; and
 - publication-ready maps and statistical figures.
 
-The primary workflow is implemented in `main_2025.ipynb`.
+The primary workflow is implemented in [`main_2025.ipynb`](main_2025.ipynb). For the bundled USA example, start with [`sample.ipynb`](sample.ipynb).
 
 ---
 
@@ -44,6 +44,28 @@ Plotting APIs
       ▼
 FIG_ROOT/fig_en/ or FIG_ROOT/fig_zh/
 ```
+
+---
+
+## Quick Start: Bundled Sample Data
+
+The repository includes [`sample.ipynb`](sample.ipynb) and [`__sampleData/`](__sampleData/) for a small example. Run the notebook from the **repository root** so its relative paths resolve. Its paths use Windows backslashes; on macOS or Linux, change those paths to forward slashes or use `pathlib.Path`.
+
+1. Clone the repository and open its root directory as the notebook working directory.
+2. Create and activate a Python virtual environment, install the dependencies from the repository root:
+
+   ```bash
+   python -m venv .venv
+   # Windows PowerShell: .\.venv\Scripts\Activate.ps1
+   # macOS/Linux: source .venv/bin/activate
+   python -m pip install -r requirements.txt
+   ```
+
+   Until that file is uploaded, install Jupyter and the packages imported by the workflow manually (including GeoPandas, Rasterio, pandas, NumPy, SciPy, Matplotlib, Seaborn, scikit-learn, tqdm, pyproj, Shapely, and matplotlib-scalebar). Your environment also needs drivers that can read GeoPackage, File Geodatabase, Parquet, and GeoTIFF inputs.
+3. Open `sample.ipynb` and run cells in order. The first code cell points to the included station, POI, population, boundary, built-up-area, and map-element inputs. It sets `RESULTS_ROOT = r"__sampleData\data"` and `FIG_ROOT = r"__sampleData"`.
+4. Inspect the generated results in `__sampleData/data/` and English figures in `__sampleData/fig_en/`. These directories already contain sample outputs, so rerunning analysis can overwrite existing files. Make a copy first if you want to preserve them.
+
+The sample includes only the USA study area represented by **Los Angeles, California**; it is intended for checking the workflow, not reproducing global rankings. Use `"USA"` for regional maps and `iso3s=["USA"]` for accessibility bars. The sample notebook calls `plot.drawOverall()`, but global comparisons based on this limited sample should not be interpreted as report-wide results. Full results require the corresponding full input datasets and `main_2025.ipynb` paths must be changed from the original local drives.
 
 ---
 
