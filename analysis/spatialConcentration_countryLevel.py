@@ -6,7 +6,7 @@ from shapely.geometry.base import BaseGeometry
 from shapely.geometry import box
 
 from .byCities import analysisByCities
-from .spatialConcentration import __calIndex
+from .spatialConcentration_cityLevel import __calIndex
 
 def spatialConcentration_Country(data: analysisByCities, evcsThres: int = 10):
     df = data.cdf

@@ -19,7 +19,6 @@ def spatialCoverage(
 ) -> None:
     dataDf = data.df
     bar = data.bar("Calculating spatial coverage of EVCS", 1)
-    tqdm.write("Reading POI and built-up area data may take several minutes.")
     # All
     col = "spatialCoverage"
     dataDf[col] = np.nan
@@ -31,25 +30,11 @@ def spatialCoverage(
     dataDf[col4] = np.nan
     col5 = "spatialCoverageForPop"
     dataDf[col5] = np.nan
-    col_3 = "spatialCoverage_Other"
-    dataDf[col_3] = np.nan
-    col2_3 = "spatialCoverageForPOI1_Other"
-    dataDf[col2_3] = np.nan
-    col3_3 = "spatialCoverageForPOI2_Other"
-    dataDf[col3_3] = np.nan
-    col4_3 = "spatialCoverageForPOI3_Other"
-    dataDf[col4_3] = np.nan
-    col5_3 = "spatialCoverageForPop_Other"
-    dataDf[col5_3] = np.nan
     
     evcsDf = gpd.read_file(evcs, layer="evcs", encoding="utf-8")[["level1", "geometry"]]
     checkCRS(evcsDf, dataDf)
     poiDf = gpd.read_parquet(poi, filters=[("fsq_category_ids", "in", [1, 2, 3])])
     checkCRS(poiDf, dataDf)
-
-    # Built up data CRS
-    builtUpAll = gpd.read_file(data.builtup, layer="builtup").geometry
-    builtUpAll = builtUpAll.to_crs(4326) if builtUpAll.crs is None or builtUpAll.crs.to_epsg() != 4326 else builtUpAll
 
     # Process by country group
     for iso3, countryDf in dataDf[["iso3_code", "disp_en", "geometry"]].groupby("iso3_code"):
@@ -64,12 +49,8 @@ def spatialCoverage(
             "{}_allGender_[0, 1, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90]_merge.tif".format(iso3)
         )
 
-        # Filter built-up area
-        bbox = countryDf.geometry.total_bounds
-        builtupInCountry = builtUpAll.cx[bbox[0]:bbox[2], bbox[1]:bbox[3]]
-
         popPath = popPath if os.path.exists(popPath) else None
-        __processByCountry(dataDf, countryDf, subEVCSDf, subPOIDf, builtupInCountry, popPath, buffer, thres, bar, maxThread)
+        __processByCountry(dataDf, countryDf, subEVCSDf, subPOIDf, popPath, buffer, thres, bar, maxThread)
 
     bar.set_description("Saving results for \"spatialConcentration\"")
     data.updateData(
@@ -77,12 +58,7 @@ def spatialCoverage(
         (col2, "REAL", None, False),
         (col3, "REAL", None, False),
         (col4, "REAL", None, False),
-        (col5, "REAL", None, False),
-        (col_3, "REAL", None, False),
-        (col2_3, "REAL", None, False),
-        (col3_3, "REAL", None, False),
-        (col4_3, "REAL", None, False),
-        (col5_3, "REAL", None, False),
+        (col5, "REAL", None, False)
     )
     bar.update()
     bar.close()
@@ -92,7 +68,6 @@ def spatialCoverage(
 def __processByCountry(
     dataDf: gpd.GeoDataFrame, countryDf: gpd.GeoDataFrame,
     evcsDf: gpd.GeoDataFrame, poiDf: gpd.GeoDataFrame,
-    builtUpAll: gpd.GeoSeries,
     popPath: str | None,
     buffer: int, thres: int,
     bar: tqdm, maxThread: int = 1

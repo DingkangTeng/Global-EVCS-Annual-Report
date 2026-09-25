@@ -6,7 +6,7 @@ import numpy as np
 from typing import Self
 
 from __setting import EUR, CHN, ASEAN, getUtmZone, CHN_ALBERS, ASIA_N_LAMBERT, IBGE_ALBERS
-from __plot import plt, BAR_COLORS, LABEL_SIZE
+from __plot import plt, BAR_COLORS, LABEL_SIZE, plotSet
 from analysis import analysisByCities
 from .__globalPlot import globalPlot
 from .__constant import HAWAII, ALASKA
@@ -54,9 +54,10 @@ class plotCities(mapTemplate, baseTemplate):
         return
     
     def drawOverall(self) -> Self:
+        plotSet()
         plt.setLanguage(self.language)
         # Country level
-        cols = list(self.sp + self.slc)
+        cols = list(("spatialCoverage",) + self.slc)
         df = self.data.cdf[["iso3_code"] + cols].replace(
             -100, np.nan
         ).dropna(how="all").set_index("iso3_code")
@@ -81,6 +82,7 @@ class plotCities(mapTemplate, baseTemplate):
         return self
 
     def draw(self, columnName: str, iso3: str | list[str] | set[str] = "Global") -> Self:
+        plotSet()
         plt.setLanguage(self.language)
 
         if columnName not in self.cols:

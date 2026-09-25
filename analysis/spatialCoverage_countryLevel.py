@@ -87,7 +87,7 @@ def spatialCoverage_Country(
             except Exception as e:
                 raise RuntimeError(e)
 
-    bar.set_description("Saving results for \"spatialConcentration\"")
+    bar.set_description("Saving results for \"spatial coverage\"")
     data.updateData(
         (col, "REAL", None, False),
         (col2, "REAL", None, False),

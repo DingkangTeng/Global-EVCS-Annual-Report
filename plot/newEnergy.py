@@ -10,7 +10,7 @@ from typing import Union, Self
 
 from analysis import analysisByCities
 from __setting import EUR, CHN, ASEAN, getUtmZone, CHN_ALBERS, ASIA_N_LAMBERT, IBGE_ALBERS
-from __plot import plt, LABEL_SIZE
+from __plot import plt, LABEL_SIZE, plotSet
 from .__template import mapTemplate, languageTemplate
 from .__text import _ISO3
 
@@ -41,6 +41,7 @@ class newEnergy(mapTemplate, languageTemplate):
         return
     
     def draw(self, iso3: Union[str, list[str], set[str]] = "Global") -> Self:
+        plotSet()
         # Define projection
         level2AK = gpd.GeoSeries()
         level2HW = gpd.GeoSeries()
@@ -142,7 +143,7 @@ class newEnergy(mapTemplate, languageTemplate):
                         "ha": "left", "va": "top"
                     },
                     v=v
-                )
+                ) if not level2AK.empty else None
                 # Hawaii
                 self._plotMap(
                     self.__cutRaster(tif, crs[2], level2HW), None,
@@ -156,7 +157,7 @@ class newEnergy(mapTemplate, languageTemplate):
                         "ha": "left", "va": "bottom"
                     },
                     v=v
-                )
+                ) if not level2HW.empty else None
                 df = self.__cutRaster(tif, crs[0], level1)
 
             ## Special figure for CHN
