@@ -72,6 +72,71 @@ The workflow was developed and tested using **Python 3.14.3**. **Python 3.14.x**
 
 The workflow was primarily developed and tested on Windows 11 and Ubuntu 22. Users on other Linux distributions and macOS can install the Python dependencies in the same way, but GDAL and related geospatial libraries may require compatible system-level installations.
 
+### GIS Environment Setup: GDAL and SpatiaLite
+
+This workflow requires native geospatial libraries in addition to Python packages:
+
+- **GDAL** provides geospatial data access and Python bindings.
+- **SpatiaLite** provides the SQLite extension required when writing analysis results to GeoPackage files.
+
+Installing `requirements.txt` alone may not provide all required native libraries. A dedicated Conda environment is recommended.
+
+#### 1. Verify GDAL
+
+```bash
+python -c "from osgeo import gdal; print('GDAL:', gdal.VersionInfo('--version'))"
+```
+
+The command should report GDAL 3.12.2.
+
+The Python GDAL bindings must be compatible with the native GDAL library. When using Conda, manage GDAL through Conda rather than independently upgrading its Python bindings with pip.
+
+#### 2. Verify SpatiaLite
+
+Run this command from the repository root:
+
+```bash
+python -c "import sqlite3; from __sqlite import spatialiteConnection; c = sqlite3.connect(':memory:', factory=spatialiteConnection); c.loadSpatialite(); print('SpatiaLite:', c.execute('SELECT spatialite_version()').fetchone()[0]); c.close()"
+```
+
+This checks the same extension-loading mechanism used by the analysis code. It should print the installed SpatiaLite version.
+
+If loading fails:
+
+- Confirm that the environment is activated.
+- Confirm that the loadable extension `mod_spatialite` is installed, together with its dependent libraries.
+- Ensure that Python and the extension use the same architecture.
+- If the extension is installed but cannot be found, add its absolute path as the first entry in `spatialiteExtensions` in `__sqlite/spatialiteConnection.py`.
+
+Typical locations to inspect are:
+
+| Platform | Typical Extension Location |
+|---|---|
+| Windows | `<environment>/Library/bin/mod_spatialite.dll` |
+| Linux | `<environment>/lib/mod_spatialite.so` |
+| macOS | `<environment>/lib/mod_spatialite.dylib` |
+
+The actual location may vary by package build. Locate the active environment with:
+
+```bash
+python -c "import sys; print(sys.prefix)"
+```
+
+For example, if the Windows extension is located at the following path, update the list accordingly:
+
+```python
+spatialiteExtensions = [
+    r"C:\path\to\envs\Library\bin\mod_spatialite.dll",
+    "mod_spatialite",
+    "libspatialite",
+    "spatialite",
+]
+```
+
+Replace the example path with the actual extension location. An absolute path resolves extension discovery, but its dependent libraries must also be available.
+
+Some Python builds, particularly on macOS, do not support SQLite extension loading. If `enable_load_extension` is unavailable, use a Python build with this capability; installing SpatiaLite alone will not resolve that issue.
+
 ### Sample Data
 
 The repository includes [`requirements.txt`](requirements.txt), [`sample.ipynb`](sample.ipynb), and [`__sampleData/`](__sampleData/). The notebook uses paths relative to the **repository root**. The checked-in notebooks record Python 3.14.3 as their authoring environment; the dependency versions in `requirements.txt` are pinned, so use a compatible Python installation.
@@ -93,7 +158,7 @@ The repository includes [`requirements.txt`](requirements.txt), [`sample.ipynb`]
 
    In **macOS/Linux**, activate it with `source .venv/bin/activate`, then run the same two `python -m pip install` commands. The pinned `gdal` package may require a compatible local GDAL installation on some systems; installation of the Python packages alone does not guarantee support for all GIS data drivers.
 
-3. Launch `python -m jupyterlab` from the repository root, select the virtual environment's Python kernel, open `sample.ipynb`, and run its cells in order. Its first cell sets `RESULTS_ROOT = r"__sampleData\data"` and `FIG_ROOT = r"__sampleData"`. The notebook paths use Windows backslashes: on macOS/Linux, change these paths to forward slashes or construct them with `pathlib.Path`.
+3. Launch `python -m jupyterlab` from the repository root, select the virtual environment's Python kernel, open `sample.ipynb`, and run its cells in order. Its first cell sets `RESULTS_ROOT = r"__sampleData\data"` and `FIG_ROOT = r"__sampleData"`.
 
 4. Inspect the generated outputs in `__sampleData/data/` and figures in `__sampleData/fig_en/`. The repository already includes sample outputs; rerunning the analysis can overwrite them.
 
