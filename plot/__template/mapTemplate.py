@@ -7,13 +7,16 @@ from matplotlib_scalebar.scalebar import ScaleBar
 from matplotlib.lines import Line2D
 from matplotlib.patches import Patch
 from matplotlib.ticker import LinearLocator, PercentFormatter
-from typing import Union
+from typing import Union, TypedDict
+try:
+    from typing import Required  # Python 3.11+
+except ImportError:
+    from typing_extensions import Required  # Python 3.10
 
 from __plot import plt, NOTE_SIZE, BAR_COLORS, BAR_COLORS_TRANS
 from ..__text import _CITIES_STD_LEGEND, _LEGEND
 
 # NoteDict
-from typing import TypedDict, Required
 class NoteDict(TypedDict, total=False):
     x: Required[float]
     y: Required[float]
@@ -158,15 +161,15 @@ class mapTemplate:
         percent = '' if noPercent else '%'
         ax.axvline(
             q1, color="green", linestyle='--', linewidth=1.5,
-            label=f"{_LEGEND["Q1"][language]} = {q1:.2f}{percent}"
+            label=f"{_LEGEND['Q1'][language]} = {q1:.2f}{percent}"
         )
         ax.axvline(
             median, color="red", linestyle='-', linewidth=2,
-            label=f"{_LEGEND["median"][language]} = {median:.2f}{percent}"
+            label=f"{_LEGEND['median'][language]} = {median:.2f}{percent}"
         )
         ax.axvline(
             q3, color="green", linestyle='--', linewidth=1.5,
-            label=f"{_LEGEND["Q3"][language]} = {q3:.2f}{percent}"
+            label=f"{_LEGEND['Q3'][language]} = {q3:.2f}{percent}"
         )
         
         ax.set_ylabel(_LEGEND["cityPercentage"][language])
@@ -183,7 +186,7 @@ class mapTemplate:
             linewidth=1.5,
             label=_LEGEND["cumPercentage"][language]
         )
-        ax2.set_ylabel(f"{_LEGEND["cumPercentage"][language]}{_LEGEND["%"][language]}")
+        ax2.set_ylabel(f"{_LEGEND['cumPercentage'][language]}{_LEGEND['%'][language]}")
         ax2.set_ylim(0, 1)
 
         # Adjust y ticker
@@ -196,7 +199,7 @@ class mapTemplate:
         # Sample n
         proxyArtist = Line2D([0], [0], linestyle="none", marker='', color="none")
         allLines = [proxyArtist] + lines1 + lines2
-        allLabels = [f"{_LEGEND["n"][language]} = {data.shape[0]}"] + labels1 + labels2
+        allLabels = [f"{_LEGEND['n'][language]} = {data.shape[0]}"] + labels1 + labels2
         
         # Legend place choosen
         if (

@@ -203,7 +203,7 @@ class plotAccessibilityCurve(languageTemplate):
             label=_ISO3[iso3].get(self.language, iso3)
         )
         ax2.set_xlabel(_LEGEND["accx"][self.language])
-        ax2.set_ylabel(f"{_LEGEND["popPercentage"][self.language]}{_LEGEND["%"][self.language]}")
+        ax2.set_ylabel(f"{_LEGEND['popPercentage'][self.language]}{_LEGEND['%'][self.language]}")
 
         if inputAx is None:
             self.__adjustAx((ax, ax2), xmin, xmax, overThres, lastX)

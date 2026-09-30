@@ -6,7 +6,11 @@ from rasterio.mask import mask
 from rasterio.transform import Affine
 from rasterio.warp import calculate_default_transform, reproject, Resampling, array_bounds
 from rasterio.io import MemoryFile
-from typing import Union, Self
+from typing import Union
+try:
+    from typing import Self  # Python 3.11+
+except ImportError:
+    from typing_extensions import Self  # Python 3.10
 from pathlib import Path
 
 from analysis import analysisByCities

@@ -51,7 +51,7 @@ FIG_ROOT/fig_en/ or FIG_ROOT/fig_zh/
 
 ### Python Requirements
 
-The workflow was developed and tested using **Python 3.14.3**. **Python 3.14.x** is therefore the recommended environment for reproducing the current repository results. The package versions used for the tested environment are pinned in [`requirements.txt`](requirements.txt):
+The workflow was developed and tested using **Python 3.14.3**. **Python 3.14.x** is therefore the recommended environment for reproducing the current repository results. **Python 3.12** is the minimum compatibility target. The source syntax is compatible with **Python 3.10 and later**, but running on Python 3.10 or 3.11 requires dependency adjustments; successful execution is not guaranteed. The package versions used in the tested environment are pinned in [`requirements.txt`](requirements.txt):
 
 | Package | Version |
 |---|---|

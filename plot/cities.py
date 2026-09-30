@@ -2,7 +2,11 @@ import os
 import geopandas as gpd
 import pandas as pd
 import numpy as np
-from typing import Self, Union
+from typing import Self
+try:
+    from typing import Union  # Python 3.11+
+except ImportError:
+    from typing_extensions import Union  # Python 3.10
 from pathlib import Path
 
 from __setting import EUR, CHN, ASEAN, getUtmZone, CHN_ALBERS, ASIA_N_LAMBERT, IBGE_ALBERS
