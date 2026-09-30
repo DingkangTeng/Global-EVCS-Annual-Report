@@ -2,11 +2,13 @@ import os
 import numpy as np
 import pandas as pd
 from hdx.location.country import Country
+from typing import Union
+from pathlib import Path
 
 from __setting import REGION_C, EUR, CHN, ASEAN, GS
 from .byCities import analysisByCities
 
-def exportCountryLevel(data: analysisByCities, savePath: str) -> pd.DataFrame:
+def exportCountryLevel(data: analysisByCities, savePath: Union[Path, str]) -> pd.DataFrame:
     REGION = {
         "JPN": "Other_Dev",
         "KOR": "Other_Dev",

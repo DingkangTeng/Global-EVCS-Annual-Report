@@ -7,15 +7,16 @@ from rasterio.mask import mask
 from rasterio.transform import rowcol
 from shapely.geometry import box
 from shapely.geometry.base import BaseGeometry
-from typing import Any
+from typing import Any, Union
+from pathlib import Path
 
 from .byCities import analysisByCities
 from .gini import _gini
 
 def gini_Country(
     data: analysisByCities,
-    pop: str,
-    evcs: str, evcsThres: int = 10
+    pop: Union[Path, str],
+    evcs: Union[Path, str], evcsThres: int = 10
 ) -> None:
     dataDf = data.cdf
     bar = data.bar("Calculating spatial accessibility gini of EVCS", 1, countryLevel=True)
@@ -60,8 +61,8 @@ def __processByCountry(
         dataDf: gpd.GeoDataFrame, iso3: str,
         idx: Any, geom: BaseGeometry,
         subEVCSDf: gpd.GeoSeries, evcsThres: int,
-        popPath: str,
-        lorSave: str
+        popPath: Union[Path, str],
+        lorSave: Union[Path, str]
 ) -> None:
     os.makedirs(lorSave, exist_ok=True)
 

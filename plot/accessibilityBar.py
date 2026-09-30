@@ -1,6 +1,8 @@
 import os
 import pandas as pd
 import numpy as np
+from typing import Union
+from pathlib import Path
 
 from __setting import EUR, CHN, ASEAN, GS
 from __plot import plt, TICK_SIZE
@@ -14,8 +16,8 @@ class plotAcccessibilityBar(languageTemplate):
 
     def __init__(
         self,
-        dataPath: str,
-        savePath: str,
+        dataPath: Union[Path, str],
+        savePath: Union[Path, str],
         threshold: int = 29, 
         language: languageTemplate.LANGUAGE = "zh",
         tickSizeMultiple: float = 0

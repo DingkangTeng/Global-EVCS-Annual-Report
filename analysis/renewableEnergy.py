@@ -6,13 +6,14 @@ from rasterio.mask import mask
 from tqdm import tqdm
 from shapely.geometry import box
 from shapely.geometry.base import BaseGeometry
-from typing import Any
+from typing import Any, Union
+from pathlib import Path
 
 from .byCities import analysisByCities
 
 def renewableEnergy(
     data: analysisByCities,
-    evcs: str, evcsThres: int = 10
+    evcs: Union[Path, str], evcsThres: int = 10
 ) -> None:
     dataDf = data.df
     bar = data.bar("Calculating spatial coverage of EVCS", 1)

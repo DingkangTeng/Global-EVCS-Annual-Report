@@ -3,6 +3,7 @@ import geopandas as gpd
 import pandas as pd
 import numpy as np
 from typing import Self, Union
+from pathlib import Path
 
 from __setting import EUR, CHN, ASEAN, getUtmZone, CHN_ALBERS, ASIA_N_LAMBERT, IBGE_ALBERS
 from __plot import plt, BAR_COLORS, LABEL_SIZE, plotSet
@@ -31,7 +32,8 @@ class plotCities(mapTemplate, baseTemplate):
     
     def __init__(
         self,
-        data: analysisByCities, mapElement: str, savePath: str,
+        data: analysisByCities,
+        mapElement: Union[Path, str], savePath: Union[Path, str],
         language: baseTemplate.LANGUAGE = "zh"
     ) -> None:
         baseTemplate.__init__(self, language)

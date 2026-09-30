@@ -8,13 +8,14 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from shapely.geometry.base import BaseGeometry
 from tqdm import tqdm
 from typing import Any, Union
+from pathlib import Path
 
 from __setting import getUtmZone, projectGeom, checkCRS
 from .byCities import analysisByCities
 
 def spatialCoverage_Country(
     data: analysisByCities,
-    evcs: str, poi: str, pop: str,
+    evcs: Union[Path, str], poi: Union[Path, str], pop: Union[Path, str],
     buffer: int = 1000,
     thres: int = 10, maxThread: int = 1, block: int = 2048
 ) -> None:

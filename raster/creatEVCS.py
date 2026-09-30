@@ -3,10 +3,15 @@ import geopandas as gpd
 import numpy as np
 import rasterio as rio
 from rasterio.transform import from_origin
+from typing import Union
+from pathlib import Path
 
 from __setting import EPSG
 
-def creatEVCS(evcs: str, savePath: str, gridSize: int = 1000, geographic: str = "AREA") -> None:
+def creatEVCS(
+    evcs: Union[Path, str], savePath: Union[Path, str],
+    gridSize: int = 1000, geographic: str = "AREA"
+) -> None:
     crs, xLim, yLim = EPSG(geographic)
     gdf = gpd.read_file(evcs, layer="evcs", encoding="utf-8")[["geometry"]]
     gdf = gdf.to_crs(crs) if (gdf.crs is not None and gdf.crs.to_epsg() != crs) or gdf.crs is None else gdf

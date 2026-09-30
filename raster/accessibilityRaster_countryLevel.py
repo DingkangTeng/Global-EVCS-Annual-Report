@@ -8,6 +8,7 @@ from shapely.geometry.base import BaseGeometry
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from threading import Lock
 from typing import Any, Union
+from pathlib import Path
 
 from __setting import stdCityName
 from analysis import analysisByCities
@@ -15,8 +16,8 @@ from .accessibilityRaster import _removeEmptyDirs
 
 def accessibilityRaster_Country(
     data: analysisByCities,
-    evcs: str, pop: str,
-    savePath: str,
+    evcs: Union[Path, str], pop: Union[Path, str],
+    savePath: Union[Path, str],
     thres: int = 10,
     blockSize: int = 4096, maxThread: int = 1
 ) -> None:

@@ -1,7 +1,8 @@
 import os, sqlite3
 import geopandas as gpd
 from tqdm import tqdm
-from typing import Any
+from typing import Any, Union
+from pathlib import Path
 
 from __sqlite import modifyTable, spatialiteConnection
 
@@ -14,7 +15,12 @@ UEXCEPT_ISO = {
 class analysisByCities:
     __slots__ = ["savePath", "gpkg", "boundary", "builtup", "df", "cdf", "layer"]
 
-    def __init__(self, savePath: str, boundary: str, builtup: str, layer: str = "result", override: bool = False) -> None:
+    def __init__(
+        self,
+        savePath: Union[Path, str], boundary: Union[Path, str], builtup: Union[Path, str],
+        layer: str = "result",
+        override: bool = False
+    ) -> None:
         self.savePath = savePath
         self.gpkg = os.path.join(savePath, "result.gpkg")
         self.boundary = boundary

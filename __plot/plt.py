@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 from matplotlib.axes import Axes
 from typing import overload, Literal, Union
+from pathlib import Path
 
 from .__setting import FIG_SIZE
 
@@ -32,7 +33,7 @@ from matplotlib.pyplot import (
 
 # Print or save fig
 def plot(
-    path: str = "", saveName: str = "",
+    path: Union[Path, str] = "", saveName: str = "",
     fig: Union[Figure, None] = None,
     **kwargs
 ) -> None:

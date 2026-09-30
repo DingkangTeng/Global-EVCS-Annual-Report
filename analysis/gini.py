@@ -1,10 +1,12 @@
 import numpy as np
+from typing import Union
+from pathlib import Path
 
 from __plot import plt, BAR_COLORS
 
 def _gini(
     indicator: np.ndarray, evcs:np.ndarray,
-    savePath: str, city: str, sorted: bool = True
+    savePath: Union[Path, str], city: str, sorted: bool = True
 ) -> float:
     # Special case: if only one grid cell has nonzero indicatior
     # Return nan if total count less than 10, because no significant meaning for gini

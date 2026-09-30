@@ -7,6 +7,7 @@ from rasterio.transform import Affine
 from rasterio.warp import calculate_default_transform, reproject, Resampling, array_bounds
 from rasterio.io import MemoryFile
 from typing import Union, Self
+from pathlib import Path
 
 from analysis import analysisByCities
 from __setting import EUR, CHN, ASEAN, getUtmZone, CHN_ALBERS, ASIA_N_LAMBERT, IBGE_ALBERS
@@ -22,7 +23,8 @@ class newEnergy(mapTemplate, languageTemplate):
 
     def __init__(
         self,
-        data: analysisByCities, mapElement: str, savePath: str,
+        data: analysisByCities,
+        mapElement: Union[Path, str], savePath: Union[Path, str],
         language: languageTemplate.LANGUAGE = "zh"
     ) -> None:
         languageTemplate.__init__(self, language)
