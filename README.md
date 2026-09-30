@@ -1,6 +1,6 @@
 # Global EVCS Annual Report
 
-This repository provides the geospatial analysis and visualization workflow for the **2026 Global Electric Vehicle Charging Station (EVCS) Annual Report**. It evaluates public charging infrastructure at the city and country levels.
+This repository contains the geospatial analysis and visualization workflow developed for the **Global Electric Vehicle Charging Station (EVCS) Annual Report**. The current implementation supports the **2025 annual report** and evaluates public charging infrastructure at both city and country scales.
 
 The workflow integrates EV charging-station locations with population rasters, points of interest (POIs), built-up areas, administrative boundaries, and renewable-energy rasters to evaluate:
 
@@ -51,7 +51,7 @@ FIG_ROOT/fig_en/ or FIG_ROOT/fig_zh/
 
 ### Python Requirements
 
-The project's pinned Python dependencies are listed in [`requirements.txt`](requirements.txt):
+The workflow was developed and tested using **Python 3.14.3**. **Python 3.14.x** is therefore the recommended environment for reproducing the current repository results. The package versions used for the tested environment are pinned in [`requirements.txt`](requirements.txt):
 
 | Package | Version |
 |---|---|
@@ -69,6 +69,8 @@ The project's pinned Python dependencies are listed in [`requirements.txt`](requ
 | Shapely | 2.1.2 |
 | tqdm | 4.67.3 |
 | HDX Python API | 6.7.0 |
+
+The workflow was primarily developed and tested on Windows 11 and Ubuntu 22. Other linux and macOS users can install the Python dependencies in the same way, but GDAL and related geospatial libraries may require compatible system-level installations.
 
 ### Sample Data
 

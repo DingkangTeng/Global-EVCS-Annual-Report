@@ -5,9 +5,9 @@ import rasterio as rio
 from rasterio import features, windows
 from sklearn.neighbors import BallTree
 from shapely.geometry.base import BaseGeometry
-from typing import Any
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from threading import Lock
+from typing import Any, Union
 
 from __setting import stdCityName
 from analysis import analysisByCities
@@ -148,7 +148,7 @@ def __processByCountry(
                         rowStart + rowOff,
                         w, h
                     )
-                    # 块的 transform（用于 geom_mask）
+                    # Block transform（for geom_mask）
                     blockTrans = windows.transform(blockWindow, transform)
                     future = executor.submit(
                         __processBlock,
@@ -156,7 +156,6 @@ def __processByCountry(
                         blockWindow, blockTrans,
                         rowOff, colOff,
                         geom,
-                        transform,
                         tree
                     )
                     futures.append(future)
@@ -187,9 +186,8 @@ def __processBlock(
     blockTransform: rio.Affine,
     rowOff: int, colOff: int,
     geom: BaseGeometry,
-    transform: rio.Affine,
     tree: BallTree
-) -> tuple[np.ndarray, int, int] | None:
+) -> Union[tuple[np.ndarray, int, int], None]:
     with rio.open(popPath) as blockSrc:
         popArray = blockSrc.read(1, window=blockWindowdow)
 
@@ -212,9 +210,10 @@ def __processBlock(
 
     # Get index
     rowsIdx, colsIdx = np.where(valid)
-    globalRows = rowsIdx + rowOff
-    globalCols = colsIdx + colOff
-    xs, ys = transform * (globalCols, globalRows) # type: ignore
+    xs, ys = blockTransform * ( # type: ignore
+        colsIdx + 0.5,
+        rowsIdx + 0.5
+    )
     popCoords = np.radians(np.column_stack([ys, xs]))
 
     # Query the distance to the nearest charging station (in radians)

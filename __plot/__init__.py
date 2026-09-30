@@ -1,3 +1,4 @@
+
 from . import plt
 from .__setting import NOTE_SIZE, TICK_SIZE, LABEL_SIZE, BOX_KWARGS
 
@@ -10,7 +11,8 @@ BAR_COLORS = [
     ["#165188", "#BFCF61", "#9FCBC3", "#BFD3BC", "#DDDAB4"],
 ]
 
-def BAR_COLORS_TRANS(alpha: float = 0.5, group: int | None = 0) -> list:
+from typing import Union
+def BAR_COLORS_TRANS(alpha: float = 0.5, group: Union[int, None] = 0) -> list:
     from matplotlib.colors import to_rgba
     
     if group is None:
@@ -20,7 +22,7 @@ def BAR_COLORS_TRANS(alpha: float = 0.5, group: int | None = 0) -> list:
         return [to_rgba(color, alpha) for color in BAR_COLORS[group]]
 
 # General setting
-def plotSet(scal1: float | int = 1, scal2: float | int = 1) -> None:
+def plotSet(scal1: Union[float, int] = 1, scal2: Union[float, int] = 1) -> None:
     import matplotlib.pyplot as plt
     from .__setting import LABEL_SIZE, TICK_SIZE
     

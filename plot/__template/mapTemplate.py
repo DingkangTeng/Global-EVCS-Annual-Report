@@ -14,7 +14,7 @@ from ..__text import _CITIES_STD_LEGEND, _LEGEND
 
 # NoteDict
 from typing import TypedDict, Required
-class __NoteDict(TypedDict, total=False):
+class NoteDict(TypedDict, total=False):
     x: Required[float]
     y: Required[float]
     text: Required[str]
@@ -32,9 +32,9 @@ class mapTemplate:
         level1: gpd.GeoSeries, level2: gpd.GeoSeries,
         mainCities: Union[gpd.GeoDataFrame, None], # Main cities is useless at present
         iso3: Union[str, list[str], set[str]], ax: plt.Axes,
-        otherLayer: list[Union[gpd.GeoDataFrame, gpd.GeoSeries]] | None = None,
-        frame: bool = False, note: Union[__NoteDict, None] = None, # Remove text note at present
-        getCbar: plt.Axes | None = None, v: tuple[float, float] = (0, 1)
+        otherLayer: Union[list[Union[gpd.GeoDataFrame, gpd.GeoSeries]], None] = None,
+        frame: bool = False, note: Union[NoteDict, None] = None, # Remove text note at present
+        getCbar: Union[plt.Axes, None] = None, v: tuple[float, float] = (0, 1)
     ) -> None:
         # Plot raster data
         if isinstance(df, tuple) and len(df) == 2:
@@ -225,7 +225,7 @@ class mapTemplate:
     
     @staticmethod
     def _legend(
-        iso3: str | list[str] | set[str],
+        iso3: Union[str, list[str], set[str]],
         title: str,
         ax: plt.Axes, legend: list[Patch]
     ) -> None:

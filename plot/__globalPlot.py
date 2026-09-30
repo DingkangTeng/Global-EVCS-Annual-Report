@@ -5,7 +5,7 @@ import seaborn as sns
 from matplotlib.ticker import PercentFormatter
 from matplotlib.patches import Patch
 from matplotlib.lines import Line2D
-from typing import Sequence
+from typing import Sequence, Union
 
 from __setting import EUR, CHN, ASEAN, GS, REGION_C
 from __plot import plt
@@ -37,7 +37,7 @@ class globalPlot:
         # Add region based color
         regionColors = REGION_C
         df["colors"] = df["region"].map(regionColors)
-        legendHandles: list[Patch | Line2D] = [
+        legendHandles: list[Union[Patch, Line2D]] = [
             Patch(
                 color=color,
                 label=_ISO3[region][self.language]

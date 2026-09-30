@@ -6,7 +6,7 @@ import matplotlib.ticker as ticker
 import matplotlib.lines as mlines
 from matplotlib.ticker import PercentFormatter
 from tqdm import tqdm
-from typing import overload
+from typing import overload, Union
 
 from __plot import plt, BAR_COLORS
 from __setting import EUR
@@ -117,7 +117,7 @@ class plotAccessibilityCurve(languageTemplate):
     def __cumulativeCurve(
         self,
         result: pd.DataFrame, iso3: str,
-        color: int, inputAx: tuple[plt.Axes, plt.Axes], agrs: tuple | None = None
+        color: int, inputAx: tuple[plt.Axes, plt.Axes], agrs: Union[tuple, None] = None
     ) -> tuple[float, float, np.bool, float]:
         ...
 
@@ -125,15 +125,15 @@ class plotAccessibilityCurve(languageTemplate):
     def __cumulativeCurve(
         self,
         result: pd.DataFrame, iso3: str,
-        color: int, inputAx: None = None, agrs: tuple | None = None
+        color: int, inputAx: None = None, agrs: Union[tuple, None] = None
     ) -> None:
         ...
 
     def __cumulativeCurve(
         self,
         result: pd.DataFrame, iso3: str,
-        color: int, inputAx: tuple[plt.Axes, plt.Axes] | None = None, agrs: tuple | None = None
-    ) -> tuple[float, float, np.bool, float] | None:
+        color: int, inputAx: Union[tuple[plt.Axes, plt.Axes], None] = None, agrs: Union[tuple, None] = None
+    ) -> Union[tuple[float, float, np.bool, float], None]:
         savePath = os.path.join(self.savePath, iso3)
         if not os.path.exists(savePath): os.makedirs(savePath)
 

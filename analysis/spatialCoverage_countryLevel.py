@@ -7,7 +7,7 @@ from rasterio.windows import from_bounds, Window, transform
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from shapely.geometry.base import BaseGeometry
 from tqdm import tqdm
-from typing import Any
+from typing import Any, Union
 
 from __setting import getUtmZone, projectGeom, checkCRS
 from .byCities import analysisByCities
@@ -104,7 +104,7 @@ def spatialCoverage_Country(
 def _processByCountry(
     dataDf: gpd.GeoDataFrame, geom: BaseGeometry, idx: Any,
     evcsDf: gpd.GeoDataFrame, poiDf: gpd.GeoDataFrame,
-    popPath: str | None,
+    popPath: Union[str, None],
     buffer: int, thres: int,
     iso3: str, bar: tqdm,
     block: int
@@ -172,7 +172,7 @@ def _calculatePop(
     popPath: str,
     geom: BaseGeometry, evcsBuffer: BaseGeometry,
     block: int
-) -> float | None:
+) -> Union[float, None]:
     # Population data is WGS84, no need for projection
     if geom.is_empty: return
     
@@ -239,7 +239,7 @@ def _calculatePop(
 def _calculatePOI(
     poiDf: gpd.GeoDataFrame,
     geom: BaseGeometry, evcsBuffer: BaseGeometry
-) -> np.ndarray | None:
+) -> Union[np.ndarray, None]:
     if geom.is_empty:
         return
     

@@ -1,4 +1,5 @@
 import geopandas as gpd
+from typing import Union
 
 def checkCRS(inputDf: gpd.GeoDataFrame, toDf: gpd.GeoDataFrame) -> None:
     if inputDf.crs != toDf.crs and toDf.crs is not None:
@@ -8,7 +9,7 @@ def checkCRS(inputDf: gpd.GeoDataFrame, toDf: gpd.GeoDataFrame) -> None:
 
     return
 
-def getCRS(path: str, layer: int | str = 0) -> int:
+def getCRS(path: str, layer: Union[int, str] = 0) -> int:
     from osgeo import ogr
     ogr.UseExceptions()
 

@@ -1,4 +1,5 @@
 import geopandas as gpd
+from typing import Union
 
 def EPSG(geographic: str) -> tuple[int, float, float]:
     if geographic == "AREA":
@@ -10,7 +11,7 @@ def EPSG(geographic: str) -> tuple[int, float, float]:
         return 4326, 180, 90
     
 # UTM
-def getUtmZone(arg1: float | gpd.GeoDataFrame, arg2: float | None = None) -> str:
+def getUtmZone(arg1: Union[float, gpd.GeoDataFrame], arg2: Union[float, None] = None) -> str:
     if isinstance(arg1, gpd.GeoDataFrame):
         gdf = arg1
         minx, miny, maxx, maxy = gdf.total_bounds

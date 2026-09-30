@@ -2,8 +2,7 @@ import os
 import geopandas as gpd
 import pandas as pd
 import numpy as np
-# from matplotlib.patches import Patch
-from typing import Self
+from typing import Self, Union
 
 from __setting import EUR, CHN, ASEAN, getUtmZone, CHN_ALBERS, ASIA_N_LAMBERT, IBGE_ALBERS
 from __plot import plt, BAR_COLORS, LABEL_SIZE, plotSet
@@ -81,7 +80,7 @@ class plotCities(mapTemplate, baseTemplate):
 
         return self
 
-    def draw(self, columnName: str, iso3: str | list[str] | set[str] = "Global") -> Self:
+    def draw(self, columnName: str, iso3: Union[str, list[str], set[str]] = "Global") -> Self:
         plotSet()
         plt.setLanguage(self.language)
 

@@ -140,10 +140,10 @@ def __processByCountry(
         # Get the valid coordination in the window
         ## Rows and cols index for all pixel in the window
         rowsIdx, colsIdx = np.where(validMask)
-        ## Transform the rows and cols in the window to the global number
-        globalRows = rowsIdx + rowStart
-        globalCols = colsIdx + colStart
-        xs, ys = transform * (globalCols, globalRows)
+        xs, ys = windowTransform * (
+            colsIdx + 0.5,
+            rowsIdx + 0.5
+        )
 
         ## Creat central coordinate for population
         popCoords = np.stack([xs, ys], axis=1)

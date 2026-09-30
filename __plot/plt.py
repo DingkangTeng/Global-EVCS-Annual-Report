@@ -8,7 +8,7 @@ __all__ = [
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 from matplotlib.axes import Axes
-from typing import overload, Literal
+from typing import overload, Literal, Union
 
 from .__setting import FIG_SIZE
 
@@ -33,7 +33,7 @@ from matplotlib.pyplot import (
 # Print or save fig
 def plot(
     path: str = "", saveName: str = "",
-    fig: Figure | None = None,
+    fig: Union[Figure, None] = None,
     **kwargs
 ) -> None:
     # """
@@ -59,19 +59,19 @@ def plot(
 
 # Initial fig
 @overload
-def figure(figsize: str | tuple[float, float], ax: Literal[True] = True, **kwargs) -> tuple[Figure, Axes]:
+def figure(figsize: Union[str, tuple[float, float]], ax: Literal[True] = True, **kwargs) -> tuple[Figure, Axes]:
     ...
 
 @overload
-def figure(figsize: str | tuple[float, float], ax: Literal[False], **kwargs) -> Figure:
+def figure(figsize: Union[str, tuple[float, float]], ax: Literal[False], **kwargs) -> Figure:
     ...
 
 def figure(
-    figsize: str | tuple[float, float],
+    figsize: Union[str, tuple[float, float]],
     ax: bool = True,
     constrainedLayout: bool = True,
     **kwargs
-) -> tuple[Figure, Axes] | Figure:
+) -> Union[tuple[Figure, Axes], Figure]:
     fig = plt.figure(
         figsize=getattr(FIG_SIZE, figsize) if isinstance(figsize, str) else figsize,
         constrained_layout=constrainedLayout
@@ -88,9 +88,10 @@ class subplot:
 
     def __init__(
         self,
-        figsize: str | tuple[float, float] | None,
+        figsize: Union[str, tuple[float, float], None],
         y: int, x: int,
-        heightRatios: list[int] | None = None, widthRatios: list[int] | None = None,
+        heightRatios: Union[list[int], None] = None,
+        widthRatios: Union[list[int], None] = None,
         legend: bool = True,
         sharex: bool = False, sharey: bool = False,
         keepyticks: bool = False, keepxticks: bool = False,

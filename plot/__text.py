@@ -434,7 +434,7 @@ _CITIES_STD_LEGEND = {
 _HEAT_STD_LEGEND = {
     "spatialCoverageForPOI1": {
         "en": "Administrative and\npublic facilities",
-        "zh": "管理和公共"
+        "zh": "管理\n公共"
     },
     "spatialCoverageForPOI2": {
         "en": "Commercial and\nbusiness facilities",
@@ -442,11 +442,11 @@ _HEAT_STD_LEGEND = {
     },
     "spatialCoverageForPOI3": {
         "en": "Leisure and\ntourism facilities",
-        "zh": "游憩休闲"
+        "zh": "游憩\n休闲"
     },
     "gini_poi1": {
         "en": "Administrative and\npublic facilities",
-        "zh": "管理和公共"
+        "zh": "管理\n公共"
     },
     "gini_poi2": {
         "en": "Commercial and\nbusiness facilities",
@@ -454,11 +454,11 @@ _HEAT_STD_LEGEND = {
     },
     "gini_poi3": {
         "en": "Leisure and\ntourism facilities",
-        "zh": "游憩休闲"
+        "zh": "游憩\n休闲"
     },
     "xlabel_acc": {
         "en": "Coverage of facilities (%)",
-        "zh": "设施覆盖度（%）"
+        "zh": "\n设施覆盖度（%）"
     },
     "xlabel_gini": {
         "en": "EVCS-facilities Gini Coefficients",
