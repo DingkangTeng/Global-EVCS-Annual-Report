@@ -69,6 +69,8 @@ The workflow was developed and tested using **Python 3.14.3**. **Python 3.14.x**
 | Shapely | 2.1.2 |
 | tqdm | 4.67.3 |
 | HDX Python API | 6.7.0 |
+| pyarrow | 23.0.1 |
+| openpyxl | 3.1.5 |
 
 The workflow was primarily developed and tested on Windows 11 and Ubuntu 22. Users on other Linux distributions and macOS can install the Python dependencies in the same way, but GDAL and related geospatial libraries may require compatible system-level installations.
 

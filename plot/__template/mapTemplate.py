@@ -7,11 +7,11 @@ from matplotlib_scalebar.scalebar import ScaleBar
 from matplotlib.lines import Line2D
 from matplotlib.patches import Patch
 from matplotlib.ticker import LinearLocator, PercentFormatter
-from typing import Union, TypedDict
+from typing import Union
 try:
-    from typing import Required  # Python 3.11+
+    from typing import TypedDict, Required  # Python 3.11+
 except ImportError:
-    from typing_extensions import Required  # Python 3.10
+    from typing_extensions import TypedDict, Required  # Python 3.10
 
 from __plot import plt, NOTE_SIZE, BAR_COLORS, BAR_COLORS_TRANS
 from ..__text import _CITIES_STD_LEGEND, _LEGEND

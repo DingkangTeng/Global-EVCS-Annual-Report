@@ -5,7 +5,7 @@ import numpy as np
 import rasterio as rio
 from rasterio import features, windows
 from shapely.geometry.base import BaseGeometry
-from typing import Any
+from typing import Any, Union
 
 from __setting import stdCityName
 from .byCities import analysisByCities
@@ -132,7 +132,7 @@ class accessibility:
         df: gpd.GeoDataFrame, col: str,
         accPath: str, src: Any,
         interval: int,
-        calUrbanArea: bool, builtUpAll: gpd.GeoSeries | None = None
+        calUrbanArea: bool, builtUpAll: Union[gpd.GeoSeries, None] = None
     ) -> pd.DataFrame:
         # Unify projection
         crs = src.crs

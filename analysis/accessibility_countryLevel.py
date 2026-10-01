@@ -7,7 +7,8 @@ from rasterio import features, windows, warp
 from tqdm import tqdm
 from shapely.geometry.base import BaseGeometry
 from concurrent.futures import as_completed, ProcessPoolExecutor
-from typing import Any
+from typing import Any, Union
+from pathlib import Path
 
 from .byCities import analysisByCities
 
@@ -20,9 +21,11 @@ __COLS = (
 )
     
 def accessibility_Country(
-    data: analysisByCities, pop: str,
-    savePath: str,
-    blockSize: int = 4096
+    data: analysisByCities,
+    pop: Union[Path, str],
+    savePath: Union[Path, str],
+    blockSize: int = 4096,
+    maxThread: int = 1
 ) -> None:
     df = data.cdf
 
@@ -96,7 +99,7 @@ def accessibility_Country(
         # Have population raster, accessibility raster, and do not have conuntry level result
         if os.path.exists(accPath) and not os.path.exists(countryResult):
             futures = []
-            with ProcessPoolExecutor(max_workers=7) as executor:
+            with ProcessPoolExecutor(max_workers=maxThread) as executor:
                 for i, popPath in enumerate(popPaths):
                     if i == 0:
                         builtUp = gpd.GeoSeries(
@@ -156,9 +159,9 @@ def accessibility_Country(
 def _processByCountry(
     geom: BaseGeometry, iso3: str, col: str,
     accPath: str, popPath: str,
-    calUrbanArea: bool, builtUp: gpd.GeoSeries | None = None,
+    calUrbanArea: bool, builtUp: Union[gpd.GeoSeries, None] = None,
     blockSize: int = 2048
-) -> pd.DataFrame | None:
+) -> Union[pd.DataFrame, None]:
     # Check data
     tifPath = os.path.join(accPath, "{}.tif".format(iso3))
     belowThres = os.path.join(accPath, "{}.txt".format(iso3))
@@ -272,7 +275,7 @@ def _processByCountry(
 
 def _processBlock(
     popBlock: np.ndarray, accBlock: np.ndarray, blockTrans: Any,
-    geom: BaseGeometry, builtUp: gpd.GeoSeries | None,
+    geom: BaseGeometry, builtUp: Union[gpd.GeoSeries, None],
     h: int, w: int, nodata: Any,
     calUrbanArea: bool,
     popTotalAcc: np.ndarray
