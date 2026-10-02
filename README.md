@@ -1,6 +1,8 @@
 # Global EVCS Annual Report
 
-This repository provides the geospatial analysis and visualization workflow for the **2026 Global Electric Vehicle Charging Station (EVCS) Annual Report**. It evaluates public charging infrastructure at the city and country levels.
+This repository provides the geospatial analysis and visualization workflow for the **2026 Global Electric Vehicle Charging Station (EVCS) Annual Report**. It evaluates public charging infrastructure at the city and country levels. The data used in this report are shared through the Global EV Data Initiative (https://globalevdata.github.io/).
+![Uploading image.png…]()
+
 
 The workflow integrates EV charging-station locations with population rasters, points of interest (POIs), built-up areas, administrative boundaries, and renewable-energy rasters to evaluate:
 
