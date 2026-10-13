@@ -139,6 +139,7 @@ class globalPlot:
         self,
         df: pd.DataFrame, cols: list,
         percentage: bool = True,
+        rot: bool = False,
         lang: str = "zh"
     )-> None:
         df = df[cols].dropna().sort_index()
@@ -169,7 +170,8 @@ class globalPlot:
                     annot=True,
                     fmt=".0f" if percentage else ".2f",
                     annot_kws={
-                        "family": "Times New Roman"
+                        "family": "Times New Roman",
+                        "rotation": -90 if rot else 0
                     },
                     cbar_kws={
                         "shrink": 0.4,   # hight
@@ -177,14 +179,26 @@ class globalPlot:
                     }
                 )
 
+                # Rotate colorbar tick labels
+                cbar = ax.collections[0].colorbar
+                assert cbar is not None, "Colorbar is not found."
+                cbar.ax.tick_params(labelrotation=-90 if rot else 0)
+
                 # Adjust ax
-                ax.set_xticklabels(ax.get_xticklabels(), rotation=90 if i==1 else 90)
+                ax.set_xticklabels(ax.get_xticklabels(), rotation=-90 if rot else 90)
                 ax.set_xlabel(_HEAT_STD_LEGEND["xlabel_acc" if percentage else "xlabel_gini"][self.language])
-                ax.set_ylabel(_LEGEND["country"][self.language])
-                
+                ax.set_ylabel(
+                    _LEGEND["country"][self.language],
+                    fontdict={
+                        "rotation": -90 if rot else 90
+                    }
+                )
+
+                savePath = os.path.join(self.savePath, "Global")
+                os.makedirs(savePath, exist_ok=True)
                 plt.plot(
-                    os.path.join(self.savePath, "Global"),
-                    f"golbal_heat_{cols}_{name}_{i+1}.jpg",
+                    savePath,
+                    f"golbal_heat_{cols}_{name}_{i+1}{'_rot' if rot else ''}.jpg",
                     bbox_inches="tight"
                 )
 

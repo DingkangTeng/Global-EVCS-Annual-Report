@@ -58,7 +58,7 @@ class plotCities(mapTemplate, baseTemplate):
 
         return
     
-    def drawOverall(self) -> Self:
+    def drawOverall(self, rot: bool = False) -> Self:
         plotSet()
         plt.setLanguage(self.language)
         # Country level
@@ -78,10 +78,10 @@ class plotCities(mapTemplate, baseTemplate):
 
         plot = globalPlot(self.language, self.savePath)
         # Global hbar
-        plot.hbar(df, cols)
+        plot.hbar(df, cols) if not rot else None
 
         # heatmap
-        plot.heat(df, ["spatialCoverageForPOI1", "spatialCoverageForPOI2", "spatialCoverageForPOI3"], lang=self.language)
+        plot.heat(df, ["spatialCoverageForPOI1", "spatialCoverageForPOI2", "spatialCoverageForPOI3"], rot=rot, lang=self.language)
         # plot.heat(df, list(self.slcGini), False) # Do not need Gini at present
 
         return self
