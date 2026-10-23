@@ -78,7 +78,7 @@ class plotCities(mapTemplate, baseTemplate):
 
         plot = globalPlot(self.language, self.savePath)
         # Global hbar
-        plot.hbar(df, cols) if not rot else None
+        plot.hbar(df, cols + ["spatialConcentration"]) if not rot else None
 
         # heatmap
         plot.heat(df, ["spatialCoverageForPOI1", "spatialCoverageForPOI2", "spatialCoverageForPOI3"], rot=rot, lang=self.language)

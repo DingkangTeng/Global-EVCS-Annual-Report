@@ -8,7 +8,7 @@ from matplotlib.lines import Line2D
 from typing import Sequence, Union
 
 from __setting import EUR, CHN, ASEAN, GS, REGION_C
-from __plot import plt
+from __plot import plt, LABEL_SIZE
 from .__text import _CITIES_STD_LEGEND, _ISO3, _LEGEND, _HEAT_STD_LEGEND
 
 class globalPlot:
@@ -182,9 +182,14 @@ class globalPlot:
                 # Rotate colorbar tick labels
                 cbar = ax.collections[0].colorbar
                 assert cbar is not None, "Colorbar is not found."
-                cbar.ax.tick_params(labelrotation=-90 if rot else 0)
+                cbar.ax.tick_params(
+                    labelrotation=-90 if rot else 0,
+                    labelsize=LABEL_SIZE + 2
+                )
 
                 # Adjust ax
+                ax.tick_params(axis="x", labelsize=LABEL_SIZE + 1)
+                ax.tick_params(axis="y", labelsize=LABEL_SIZE + 1)
                 ax.set_xticklabels(ax.get_xticklabels(), rotation=-90 if rot else 90)
                 ax.set_xlabel(_HEAT_STD_LEGEND["xlabel_acc" if percentage else "xlabel_gini"][self.language])
                 ax.set_ylabel(

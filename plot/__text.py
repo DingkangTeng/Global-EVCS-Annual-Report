@@ -2,7 +2,7 @@
 _ISO3 = {
     # China
     "CHN": {
-        "en": "China Mainland",
+        "en": "Chinese Mainland",
         "zh": "中国大陆"
     },
     "TWN": {
@@ -28,7 +28,7 @@ _ISO3 = {
     },
     # North American
     "USA": {
-        "en": "U.S.A.",
+        "en": "U.S.",
         "zh": "美国"
     },
     "CAN": {
@@ -58,7 +58,7 @@ _ISO3 = {
         "zh": "印度尼西亚"
     },
     "LAO": {
-        "en": "Lao P.D.R.",
+        "en": "Laos",
         "zh": "老挝"
     },
     "MYS": {
@@ -256,7 +256,7 @@ _ISO3 = {
         "zh": "澳新"
     },
     "GS": {
-        "en": "The Global South",
+        "en": "GS",
         "zh": "全球南方国家"
     },
     "All Data": {
@@ -273,7 +273,7 @@ _ISO3 = {
         "zh": "六大研究区域"
     },
     "Other_Dev":{
-        "en": "Other DCs",
+        "en": "OD",
         "zh": "其他发达国家"
     }
 }
@@ -457,7 +457,7 @@ _HEAT_STD_LEGEND = {
         "zh": "游憩\n休闲"
     },
     "xlabel_acc": {
-        "en": "Coverage of facilities (%)",
+        "en": "Faciliity coverage (%)",
         "zh": "\n设施覆盖度（%）"
     },
     "xlabel_gini": {
