@@ -1,13 +1,29 @@
-import os
+import os, sqlite3
 import pandas as pd
 import numpy as np
-from typing import Union
+from typing import Union, Any
 from pathlib import Path
+from tqdm import tqdm
 
 from __setting import EUR, CHN, ASEAN, GS
 from __plot import plt, TICK_SIZE
+from __sqlite import modifyTable, spatialiteConnection
 from .__template import languageTemplate
 from .__text import _LEGEND, _ISO3
+
+_GROUPS = [
+    ("population_acc1km_percentage", "all"),
+    ("population_acc1km_percentage_child", "child"),
+    ("population_acc1km_percentage_young", "young"),
+    ("population_acc1km_percentage_middle", "middle"),
+    ("population_acc1km_percentage_elder", "elder"),
+    ("population_acc1km_percentage_male", "male"),
+    ("population_acc1km_percentage_female", "female"),
+    ("population_acc1km_percentage_BuiltUp", "builtup"),
+    ("population_acc1km_percentage_Other", "other")
+]
+# Group setting
+_BINS = [-np.inf, 1000, 2000, np.inf]
 
 class plotAcccessibilityBar(languageTemplate):
     __slots__ = ["dataPath", "savePath", "threshold", "tickSizeMultiple"]
@@ -29,6 +45,132 @@ class plotAcccessibilityBar(languageTemplate):
         self.threshold = threshold
         self.tickSizeMultiple = tickSizeMultiple
         
+        return
+
+    def save2Gpkg(self, countryLevel: bool = False) -> None:
+        # Temporary solution: only support country-level data for now
+        if not countryLevel:
+            raise NotImplementedError(
+                "City-level accessibility requires city-specific data."
+            )
+        # Columns
+        bands = [("<=1 km", "le1km"), ("1-2 km", "1to2km"), (">2 km", "gt2km")]
+        fields = [
+            (f"acc_{group}_{band}", column, label)
+            for column, group in _GROUPS for label, band in bands
+        ]
+
+        suffix = "_CountryLevel" if countryLevel else ""
+        idx = "iso3_code" if countryLevel else "disp_en"
+        columns = [col for col, _ in _GROUPS]
+        labels = [label for label, _ in bands]
+        results = []
+
+        iso3s = sorted(os.listdir(self.dataPath))
+
+        for iso3 in tqdm(iso3s, desc="Saving accessibility bar to GPKG", unit="country"):
+            dataPath = os.path.join(self.dataPath, iso3, f"{iso3}{suffix}.csv")
+            if not os.path.isfile(dataPath):
+                continue
+            df = pd.read_csv(dataPath, index_col="accessibility", dtype=float)
+
+            # Group by accessibility distance
+            df = df[columns]
+            df["group"] = pd.cut(
+                df.index.astype(float),
+                bins=_BINS,
+                labels=labels,
+                right=True
+            )
+
+            # Calculate percentages
+            df = df.groupby(
+                "group", observed=False
+            )[columns].sum().T
+
+            df = df.reindex(
+                index=columns, columns=labels, fill_value=0
+            )
+            df = df.div(
+                df.sum(axis=1).replace(0, np.nan), axis=0
+            ) * 100
+
+            # Flatten into one record per country
+            result: dict[str, object] = {idx: iso3}
+            result.update({
+                name: df.at[column, label]
+                for name, column, label in fields
+            })
+            results.append(result)
+
+        if not results:
+            raise ValueError("No accessibility CSV files found.")
+
+        # Complete country-level result DataFrame
+        resultDF = pd.DataFrame(
+            results,
+            columns=[idx] + [name for name, _, _ in fields]
+        )
+        self.__updateData(
+            resultDF,
+            *((name, "REAL", None, False) for name, _, _ in fields),
+            table="result_country" if countryLevel else "result",
+            idx=idx
+        )
+
+        return
+
+    def __updateData(
+        self,
+        df: pd.DataFrame,
+        *fields: tuple[str, str, Any, bool], table: str,
+        idx: str,
+    ) -> None:
+        conn = sqlite3.connect(
+            os.path.join(os.path.dirname(self.dataPath), "result.gpkg"),
+            factory=spatialiteConnection
+        )
+
+        conn.loadSpatialite() # Load spatialite extension
+        cursor = conn.cursor(factory=modifyTable)
+        # Add field
+        ## ("affectedIncident", "Text", None, False)
+        ## fieldName, colType, initialValue, whetherIndex
+        cursor.addFields(table, *fields)
+        # Fid not continue, using unique disp_en or iso3_code as index
+        cursor.execute(f"CREATE INDEX IF NOT EXISTS idx_{idx} ON {table} ({idx})")
+        conn.commit()
+
+        # Add data
+        columns = [idx] + [field[0] for field in fields]
+        df[columns].to_sql(
+            "tempTable", conn,
+            if_exists="replace", index=False, method="multi",
+            chunksize=32766//len(columns) # Max chunksize is 32766 for all threads
+        )
+        cursor.execute(f"CREATE INDEX IF NOT EXISTS idx_{idx} ON tempTable ({idx})")
+        conn.commit()
+        conn.execute("BEGIN TRANSACTION;")
+
+        # Update all fields in one SQL statement
+        assignments = ", ".join(
+            f'"{name}" = tempTable."{name}"'
+            for name in columns[1:]
+        )
+        cursor.execute(
+            f"""
+            UPDATE "{table}"
+            SET {assignments}
+            FROM tempTable
+            WHERE tempTable."{idx}" = "{table}"."{idx}"
+            """
+        )
+
+        cursor.execute("DROP TABLE IF EXISTS tempTable")
+        conn.commit()
+        conn.execute("VACUUM")
+        conn.close()
+
         return
     
     def plotByCountry(
@@ -65,19 +207,12 @@ class plotAcccessibilityBar(languageTemplate):
         return
     
     def __bar(self, df: pd.DataFrame, iso3: str) -> None:
-        cols = [
-            "population_acc1km_percentage",
-            "population_acc1km_percentage_child", "population_acc1km_percentage_young",
-            "population_acc1km_percentage_middle", "population_acc1km_percentage_elder",
-            "population_acc1km_percentage_male", "population_acc1km_percentage_female",
-            "population_acc1km_percentage_BuiltUp", "population_acc1km_percentage_Other"
-        ]
+        cols = [x[1] for x in _GROUPS]
         df = df[cols]
 
         # Group
-        bins = [-np.inf, 1000, 2000, np.inf]
         labels = ["<=1 km", "1-2 km", ">2 km"]
-        df["group"] = pd.cut(df.index.astype(float), bins=bins, labels=labels, right=True)
+        df["group"] = pd.cut(df.index.astype(float), bins=_BINS, labels=labels, right=True)
         df = df.groupby("group").sum().T
         df = df.div(df.sum(axis=1), axis=0) * 100
 
@@ -92,8 +227,8 @@ class plotAcccessibilityBar(languageTemplate):
 
         left = np.zeros(df.shape[0])
         n_bars = len(ypos)
-        n_groups = len(labels)
-        int_matrix = np.zeros((n_bars, n_groups), dtype=int)
+        n__GROUPS = len(labels)
+        int_matrix = np.zeros((n_bars, n__GROUPS), dtype=int)
 
         for bar_idx in range(n_bars):
             # Retrieve the three segment percentages (floating) corresponding to the bar

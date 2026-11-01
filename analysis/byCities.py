@@ -79,7 +79,6 @@ class analysisByCities:
         conn.commit()
 
         # Add data
-        
         columns = [idx] + [field[0] for field in fields]
         df[columns].to_sql(
             "tempTable", conn,
