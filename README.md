@@ -1,8 +1,7 @@
 # Global EVCS Annual Report
 
-This repository provides the geospatial analysis and visualization workflow for the **2026 Global Electric Vehicle Charging Station (EVCS) Annual Report**. It evaluates public charging infrastructure at the city and country levels. The data used in this report are shared through the Global EV Data Initiative (https://globalevdata.github.io/).
+This repository provides the geospatial analysis and visualization workflow for the **2026 Global Electric Vehicle Charging Station (EVCS) Annual Report**. It evaluates public charging infrastructure at the city and country levels. The data used in this report are shared through the Global EV Data Initiative ([https://globalevdata.github.io/](https://globalevdata.github.io/)).
 ![Global EV Data Initiative](image_Global%20EV%20Initiative.png)
-
 
 The workflow integrates EV charging-station locations with population rasters, points of interest (POIs), built-up areas, administrative boundaries, and renewable-energy rasters to evaluate:
 
@@ -56,7 +55,7 @@ FIG_ROOT/fig_en/ or FIG_ROOT/fig_zh/
 The workflow was developed and tested using **Python 3.14.3**. **Python 3.14.x** is therefore the recommended environment for reproducing the current repository results. **Python 3.12** is the minimum compatibility target. The source syntax is compatible with **Python 3.10 and later**, but running on Python 3.10 or 3.11 requires dependency adjustments; successful execution is not guaranteed. The package versions used in the tested environment are pinned in [`requirements.txt`](requirements.txt):
 
 | Package | Version |
-|---|---|
+| --- | --- |
 | GDAL | 3.12.2 |
 | GeoPandas | 1.1.3 |
 | Matplotlib | 3.11.2 |
@@ -115,7 +114,7 @@ If loading fails:
 Typical locations to inspect are:
 
 | Platform | Typical Extension Location |
-|---|---|
+| --- | --- |
 | Windows | `<environment>/Library/bin/mod_spatialite.dll` |
 | Linux | `<environment>/lib/mod_spatialite.so` |
 | macOS | `<environment>/lib/mod_spatialite.dylib` |
@@ -303,7 +302,7 @@ POP = r"path\to\population"
 Every filename begins with an ISO 3166-1 alpha-3 code such as `USA`, `CHN`, `DEU`, `JPN`, or `BRA`.
 
 | Group | Directory | Required filename suffix |
-|---|---|---|
+| --- | --- | --- |
 | Total | `population_All` | `allGender_[0, 1, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90]_merge.tif` |
 | Male | `population_Male` | `['m']_[0, 1, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90]_merge.tif` |
 | Female | `population_Female` | `['f']_[0, 1, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90]_merge.tif` |
@@ -540,7 +539,7 @@ Generates overall country-level report graphics, including ranking charts and he
 `plotCities` exposes metric-specific methods through a dynamic plotting interface. For example, `plot.spatialConcentration("CHN")` is equivalent to `plot.draw("spatialConcentration", "CHN")`.
 
 | Method | Purpose |
-|---|---|
+| --- | --- |
 | `plot.spatialConcentration(region)` | Maps and plots the city-level concentration indicator. |
 | `plot.spatialCoverage(region)` | Maps city-level geographic EVCS coverage. |
 | `plot.spatialCoverageForPop(region)` | Maps the population share covered by the EVCS buffer. |
@@ -691,7 +690,7 @@ for region in ["CHN", "USA", "EUR"]:
 ## Region Codes
 
 | Code | Meaning |
-|---|---|
+| --- | --- |
 | `CHN_ALL` | China, Hong Kong SAR, Macao SAR, and Taiwan |
 | `CHN` | China map configuration used by the plotting workflow |
 | `EUR` | European region defined by this project |
